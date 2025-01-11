@@ -1,0 +1,392 @@
+@use "sass:math";
+
+.candidate {
+  padding-top: 23px;
+  z-index: 0;
+
+  &__wrapper {
+    background: #f1f1f1;
+    min-height: 100vh;
+  }
+
+  .profileBreadcrumbs {
+    position: relative;
+    z-index: -1;
+  }
+
+  .row {
+    position: relative;
+    z-index: -1;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+
+    &__left {
+      h3 {
+        margin-bottom: 30px;
+      }
+    }
+  }
+
+  .col-xl-8 {
+    position: relative;
+    z-index: -1;
+  }
+
+  &__main {
+    margin-top: 60px;
+    position: relative;
+    z-index: -1;
+
+    &-description {
+      padding-left: 16px;
+
+      h2 {
+        font-family: "GT Eesti Pro Display", sans-serif;
+        font-size: 2.8em;
+        font-weight: 700;
+        font-style: normal;
+        letter-spacing: normal;
+        line-height: 36px;
+        text-align: left;
+      }
+
+      p {
+        font-family: "GT Eesti Pro Display", sans-serif;
+        font-size: 2.2em;
+        font-weight: 300;
+        font-style: normal;
+        letter-spacing: normal;
+        line-height: 36px;
+        text-align: left;
+        margin: 20px 0;
+      }
+    }
+  }
+
+  &__text {
+    font-size: 1.6em;
+    p {
+      font-family: "GT Eesti Pro Display", sans-serif;
+      font-size: 1.6em;
+      font-weight: 100;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: left;
+
+      @media (max-width: 1200px) {
+        margin: 0;
+      }
+    }
+
+    &-secondary {
+      font-family: "GT Eesti Pro Display", sans-serif;
+      font-size: 1.6em;
+      font-weight: 100;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: left;
+      line-height: 28px;
+    }
+  }
+
+  &__icon {
+    min-width: 260px;
+    min-height: 120px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    position: relative;
+
+    img {
+      position: absolute;
+
+      @media (max-width: 768px) {
+        position: initial;
+      }
+    }
+
+    h3 {
+      position: absolute;
+      right: 20%;
+      top: 40%;
+      font-family: "GT Eesti Pro Display", sans-serif;
+      font-size: 1.8em;
+      font-weight: 400;
+      font-style: normal;
+      letter-spacing: normal;
+      line-height: normal;
+      text-align: left;
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &-img {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #d3e4bc;
+      border-radius: 50px;
+      margin-right: 20px;
+
+      img {
+        transform: rotate(180deg);
+      }
+    }
+    &-sp {
+      font-size: 12px;
+      color: #5b6871;
+      max-width: 75px;
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+      }
+    }
+  }
+
+  footer {
+    margin-top: 2.5rem !important;
+    position: relative;
+    z-index: -2;
+  }
+}
+
+@media (max-width: 375.98px) {
+  .candidate {
+    &__title {
+      h2 {
+        font-size: 4.5em;
+        line-height: normal;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .candidate {
+    &__header {
+      flex-direction: column;
+    }
+
+    &__arrow {
+      margin-bottom: 40px;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .candidate {
+    &__btn {
+      display: block;
+      width: 221px;
+      height: 49px;
+      box-shadow: 0 8px 20px rgba(82, 151, 34, 0.21);
+      border-radius: 24px;
+      background-color: #ffffff;
+      background-image: linear-gradient(to top, lightpink 0%, brown 100%),
+        linear-gradient(
+          36deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.16) 47%,
+          rgba(255, 255, 255, 0.17) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      color: #ffffff;
+      font-family: "Muller", sans-serif;
+      font-size: 1.3em;
+      letter-spacing: normal;
+      border: none;
+      text-align: center;
+      margin: 28px auto;
+    }
+
+    &__arrow {
+      margin-left: 0;
+
+      &-sp {
+        span {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+.front {
+  left: -5%;
+}
+
+.back {
+  top: 11%;
+  left: -9%;
+}
+
+.des {
+  top: 24%;
+  left: -9%;
+}
+
+@media (max-width: 1199px) {
+  .candidate + .logout-button {
+    top: 16px !important;
+  }
+}
+
+@media (max-width: 375.98px) {
+  .candidate {
+    &__main {
+      &-description {
+        h2 {
+          font-size: 3em;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 345.98px) {
+  .candidate {
+    &__main {
+      &-description {
+        h2 {
+          font-size: 2.6em;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 576.98px) {
+  .candidate {
+    &__btn {
+      display: none;
+    }
+  }
+}
+
+.candidate + .logout-button {
+  top: 80px !important;
+}
+
+.candidate__works {
+  @media (min-width: 576px) {
+    padding: 0 0 45px 0;
+  }
+}
+.works__body {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px -30px;
+  column-gap: 10px;
+  row-gap: 15px;
+
+  @media (max-width: 1200px) {
+    margin-top: 20px;
+    padding: 0 15px;
+  }
+
+  &__info {
+    width: 100%;
+    background: lightpink;
+    border-radius: 12px 12px 0px 0px;
+    padding: 20px 0 20px 50px;
+
+    p {
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 32px;
+    }
+  }
+}
+.item-works {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 49%;
+  position: relative;
+
+  @media (max-width: 761px) {
+    flex: 0 1 100%;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    height: 170px;
+    padding: 25px 40px 25px 25px;
+    border-radius: 12px;
+    justify-content: space-between;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &__head {
+      display: flex;
+      justify-content: space-between;
+
+      &__arrow {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50px;
+        background: brown;
+        margin: auto 0;
+      }
+    }
+
+    &__info {
+      display: flex;
+      position: relative;
+      align-items: start;
+      img {
+        margin-top: 15px;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 8px;
+        border-radius: 12px;
+        background: brown;
+        bottom: -36%;
+        left: 10%;
+      }
+    }
+
+    &__project {
+      margin-left: 15px;
+      h5 {
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 32px;
+        color: #000000;
+      }
+
+      p {
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 22px;
+        max-width: 120px;
+        color: #000000;
+      }
+    }
+
+    span {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 32px;
+      color: #000000;
+      text-align: end;
+    }
+  }
+}

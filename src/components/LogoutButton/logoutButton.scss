@@ -1,0 +1,26 @@
+.logout-button {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  width: 131px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 1.6em;
+  letter-spacing: 0.8px;
+  background-color: brown;
+  color: #ffffff;
+  border: 3px solid brown;
+  font-family: "Muller", sans-serif;
+  text-align: center;
+
+  &:hover {
+    background-color: #ffffff;
+    color: black;
+    border: 3px solid black;
+    box-shadow: 3px 2px 5px rgba(82, 151, 34, 0.21);
+    transition: 0.3s;
+  }
+}

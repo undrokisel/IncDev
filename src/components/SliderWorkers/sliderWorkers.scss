@@ -1,0 +1,173 @@
+.slider-workers {
+  background-color: #f1f1f1;
+
+  &__title {
+    display: flex;
+    flex-direction: row;
+    padding: 56px 0 56px 0;
+
+    h2,
+    h3 {
+      font-size: 30px;
+      line-height: 32px;
+    }
+
+    h3 {
+      color: brown;
+      margin-left: 10px;
+    }
+  }
+
+  &__description {
+    margin-top: 55px;
+
+    h2 {
+      font-size: 18px;
+      line-height: 32px;
+    }
+
+    p {
+      margin: 37px 0 0 0;
+      font-size: 16px;
+      line-height: 22px;
+      color: #000000;
+    }
+
+    @media (max-width: 1024px) {
+      text-align: center;
+      margin-top: 20px;
+
+      p {
+        margin-top: 15px;
+      }
+    }
+  }
+
+  .slick-list {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .worker {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 15px;
+
+    img {
+      margin-right: 20px;
+      width: 100px;
+      height: 100px;
+    }
+
+    p {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 22px;
+      color: black;
+      width: 210px;
+    }
+
+    &__resume {
+      margin-top: 5px;
+      width: 177px;
+      height: 40px;
+      font-size: 14px;
+      line-height: 32px;
+      transition: 0.5s;
+
+      a {
+        color: white;
+        width: 100%;
+      }
+    }
+  }
+
+  .slick-next {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: brown;
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+
+    &:before {
+      content: url("../../assets/icons/arrows/arrowViewReport.svg");
+    }
+
+    &:focus {
+      background-color: brown;
+    }
+
+    &:hover {
+      background-color: lightpink;
+    }
+  }
+
+  .slick-prev {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: brown;
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+
+    &:before {
+      content: url("../../assets/icons/arrows/ArrovLeftSlider.png");
+    }
+
+    &:focus {
+      background-color: brown;
+    }
+
+    &:hover {
+      background-color: lightpink;
+    }
+  }
+
+  @media (max-width: 1375px) {
+    margin-top: 50px;
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 0;
+
+    &__title {
+      flex-direction: column;
+      padding: 120px 0 56px 0;
+      text-align: center;
+
+      h3 {
+        margin: 0;
+      }
+    }
+
+    .slick-next,
+    .slick-prev {
+      display: none !important;
+    }
+
+    .worker {
+      flex-direction: column;
+      margin: 0;
+      align-items: center;
+
+      img {
+        margin: 0;
+      }
+
+      p {
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      &-description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}

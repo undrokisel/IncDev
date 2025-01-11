@@ -1,0 +1,101 @@
+.profile__calendar {
+  background: #f1f1f1;
+  height: 100%;
+  min-height: 100vh;
+  font-family: "LabGrotesque", sans-serif;
+
+  .container {
+    max-width: 1160px;
+    margin-top: 23px;
+
+    @media (max-width: 570px) {
+      margin-top: 0;
+    }
+  }
+
+  .summary__info {
+    padding-right: 25px;
+
+    @media (max-width: 500px) {
+      padding-right: 5px;
+    }
+  }
+
+  .loader__wrapper {
+    min-height: 719px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: 1000px) {
+      min-height: 645px;
+    }
+  }
+
+  .calendar__wrapper {
+    min-height: 719px;
+
+    @media (max-width: 1000px) {
+      min-height: auto;
+    }
+  }
+
+  .loader {
+    &:hover {
+      path {
+        fill: #ffffff;
+      }
+    }
+  }
+  .profile__calendar {
+    margin-top: 20px;
+  }
+  &__back {
+    text-decoration: none !important;
+    color: black !important;
+    font-size: 14px;
+
+    div {
+      display: flex;
+      column-gap: 20px;
+    }
+  }
+
+  &__profile {
+    margin-top: 42px;
+  }
+
+  &__btn {
+    transition: all 0.3s ease;
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  .summary__info {
+    @media (max-width: 800px) {
+      .summary__name {
+        margin: 0;
+        max-width: 220px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .summary__name {
+        max-width: 150px;
+      }
+    }
+  }
+}
+.clear-days {
+  background: red;
+  padding: 5px 20px;
+  font-size: 14px;
+
+  &:hover {
+    background: rgba(255, 0, 0, 0.637);
+  }
+}

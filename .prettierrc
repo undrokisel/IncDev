@@ -1,0 +1,19 @@
+{
+  "tabWidth": 2,
+  "semi": true,
+  "printWidth": 80,
+  "useTabs": false,
+  "importOrder": [
+    "^@react/(.*)$",
+    "^@redux/(.*)$",
+    "^@utils/(.*)$",
+    "^@api/(.*)$",
+    "^@hooks/(.*)$",
+    "^@pages/(.*)$",
+    "^@components/(.*)$",
+    "^assets/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

@@ -1,0 +1,125 @@
+body {
+  font-family: "LabGrotesque", sans-serif !important;
+}
+
+.container {
+  max-width: 1160px !important;
+}
+.catalog {
+  background: #f1f1f1;
+  height: 100%;
+  min-height: 100vh;
+  font-family: "LabGrotesque", sans-serif;
+  padding-top: 23px;
+
+  &__title {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 32px;
+  }
+}
+
+.outstaffing-block__selected .outstaffing-block__img {
+  background-color: pink99;
+  color: brown;
+}
+.outstaffing-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & > div {
+    margin-top: 60px;
+
+    & > ul {
+      padding-left: 0;
+    }
+  }
+
+  & > p {
+    font-family: "GT Eesti Pro Display";
+    font-size: 1.2em;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: normal;
+    line-height: 36px;
+    text-align: left;
+    margin-bottom: 0;
+  }
+
+  &__img {
+    cursor: pointer;
+    min-width: 260px;
+    min-height: 120px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    position: relative;
+
+    h3 {
+      position: absolute;
+      right: 13%;
+      top: 30%;
+      max-width: 130px;
+      font-family: "GT Eesti Pro Display";
+      font-size: 18px;
+      font-weight: 400;
+      font-style: normal;
+      letter-spacing: normal;
+      line-height: normal;
+      text-align: center;
+    }
+
+    img {
+      position: absolute;
+    }
+  }
+
+  &__mobile--block {
+    display: block;
+    animation: fadeInFromNone 0.5s ease-out;
+  }
+
+  &__border {
+    border: 2px solid #cdeaba;
+  }
+
+  &__items {
+    li {
+      font-family: "GT Eesti Pro Display";
+      font-size: 1.8em;
+      font-weight: 100;
+      font-style: normal;
+      letter-spacing: normal;
+      line-height: 36px;
+      text-align: left;
+      list-style: none;
+      cursor: pointer;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .outstaffing-block__mobile--none {
+    display: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .outstaffing-block {
+    margin-top: 0;
+
+    & > div {
+      margin-top: 32px;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .outstaffing-block {
+    margin-top: 40px;
+
+    &____text {
+      display: none;
+    }
+  }
+}

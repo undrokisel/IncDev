@@ -2,7 +2,7 @@ import React from "react";
 
 import plus from "assets/icons/plus.svg";
 
-import "./allTaskTableItem.scss";
+import "./AllTaskTableItem.scss";
 
 const AllTaskTableItem = ({ task, projects }) => {
   function toggleDescTask(e) {

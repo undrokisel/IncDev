@@ -62,23 +62,14 @@ const App = () => {
     <>
       <Router>
         <Routes>
-          {/* работает */}
           <Route exact path="/authdev" element={<AuthForDevelopers />} />
-         {/* работает */}
           <Route exact path="/auth" element={<AuthForPartners />} />
-          {/* работает */}
           <Route exact path="/tracker-intro" element={<TrackerIntro />} />
-          {/* работает */}
           <Route exact path="/tracker-auth" element={<TrackerAuth />} />
-          {/* работает */}
           <Route exact path="/tracker-registration" element={<TrackerRegistration />} />
-          {/* работает */}
           <Route exact path="/company" element={<CompanyInfo />} />
-
-          {/* работает*/}
           <Route exact path="/worker/:id" element={<FreeDevelopers />} />
 
-          {/* работает частично */}
           <Route
             exact
             path="/tracker/task/:id"

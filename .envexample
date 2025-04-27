@@ -1,5 +1,5 @@
-REACT_APP_API_URL = https://inc-dev-kappa.vercel.app/api
-REACT_APP_BASE_URL = https://inc-dev-kappa.vercel.app/api
+REACT_APP_API_URL = https://inc-dev-kappa.vercel.app:3001/api
+REACT_APP_BASE_URL = https://inc-dev-kappa.vercel.app:3000
 
 JWT_SECRET_KEY=
 

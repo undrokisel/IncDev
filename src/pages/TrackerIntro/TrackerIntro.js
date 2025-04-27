@@ -31,9 +31,8 @@ export const TrackerIntro = () => {
                 <span> для Вашей команды</span>
               </h1>
               <p className="trackerIntro__intro__subtitle">
-                Сервис для совместной работы команд. Все процессы
-                в одном месте: проекты, задачи, цели, сотрудники,
-                документы, переписки, отчеты
+                Сервис для совместной работы команд. Все процессы в одном месте:
+                проекты, задачи, цели, сотрудники, документы, переписки, отчеты
               </p>
               <NavLink to="/tracker-registration" className="trackerIntro__btn">
                 Начать работу
@@ -47,19 +46,19 @@ export const TrackerIntro = () => {
           </div>
         </div>
         {/* <div className="trackerIntro__board"> */}
-          {/* <div className="trackerIntro__boardImg"> */}
-            {/* <img className="board" src={trackerBoard} alt="board" />
+        {/* <div className="trackerIntro__boardImg"> */}
+        {/* <img className="board" src={trackerBoard} alt="board" />
             <img className="heard" src={trackerHeard} alt="heard" /> */}
-          {/* </div> */}
-          {/* <div className="trackerIntro__board__info"> */}
-            {/* <p>
+        {/* </div> */}
+        {/* <div className="trackerIntro__board__info"> */}
+        {/* <p>
               Управление большим количеством проектов и гибкая настройка
               структуры под любые процессы
             </p> */}
-            {/* <NavLink to="/tracker-registration" className="trackerIntro__btn">
+        {/* <NavLink to="/tracker-registration" className="trackerIntro__btn">
               Начать работу
             </NavLink> */}
-          {/* </div>
+        {/* </div>
         </div> */}
         <div className="container">
           <div className="trackerIntro__info">

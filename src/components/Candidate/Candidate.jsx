@@ -52,9 +52,9 @@ const Candidate = () => {
     //   dispatch(currentCandidate(el.userCard))
     // );
 
-      const currCand = developers[candidateId-1];
+    const currCand = developers[candidateId - 1];
 
-      dispatch(currentCandidate(currCand));
+    dispatch(currentCandidate(currCand));
   }, [dispatch]);
 
   const { position_id, skillValues, vc_text: text } = currentCandidateObj;
@@ -188,7 +188,9 @@ const Candidate = () => {
                             <img src={gitImgItem} alt="img" />
                             <div className="item-works__body__project">
                               <h5>React-admin-sales</h5>
-                              <p>инструмент для отслеживания показателей продаж</p>
+                              <p>
+                                инструмент для отслеживания показателей продаж
+                              </p>
                             </div>
                           </div>
                           <div className="item-works__body__head__arrow">

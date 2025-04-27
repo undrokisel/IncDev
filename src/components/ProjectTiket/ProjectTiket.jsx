@@ -46,7 +46,7 @@ export const ProjectTiket = ({ project, index }) => {
       event &&
       !path.find(
         (div) =>
-          div.classList && div.classList.contains(`project-${project.id}`)
+          div.classList && div.classList.contains(`project-${project.id}`),
       )
     ) {
       setModalSelect(false);
@@ -54,25 +54,22 @@ export const ProjectTiket = ({ project, index }) => {
   }
 
   function removeProject() {
-
-
     // apiRequest("/project/update", {
-    
+
     //   method: "PUT",
     //   data: {
     //     project_id: project.id,
     //     status: 10,
     //   },
     // }).then(() => {
-    
+
     //   dispatch(deleteProject(project));
     //   showNotification({
     //     show: true,
     //     text: "Проект успешно была перемещена в архив",
     //     type: "archive",
     //   });
-    
-    
+
     // });
 
     dispatch(deleteProject(project));
@@ -81,7 +78,6 @@ export const ProjectTiket = ({ project, index }) => {
       text: "Проект успешно перемещен в архив",
       type: "archive",
     });
-
   }
 
   function closeAcceptModal() {
@@ -105,7 +101,7 @@ export const ProjectTiket = ({ project, index }) => {
             {project.columns.reduce(
               (accumulator, currentValue) =>
                 accumulator + currentValue.tasks.length,
-              0
+              0,
             )}
           </span>
           <img src={avatarProject} alt="#" className="project__avatar" />

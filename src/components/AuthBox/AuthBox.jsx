@@ -65,7 +65,7 @@ export const AuthBox = ({ title }) => {
             localStorage.setItem("role_status", res.status);
             localStorage.setItem(
               "access_token_expired_at",
-              res.access_token_expired_at
+              res.access_token_expired_at,
             );
             dispatch(auth(true));
             dispatch(setUserInfo(res));
@@ -75,7 +75,6 @@ export const AuthBox = ({ title }) => {
           }
         })
         .catch((error) => console.log(error));
-
     }
   };
 

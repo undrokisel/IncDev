@@ -28,7 +28,7 @@ export const TrackerSelectColumn = ({ columns, task, currentColumn }) => {
                     moveProjectTask({
                       startWrapperIndex: { index: currentColumn.id, task },
                       columnId: column.id,
-                    })
+                    }),
                   );
                 }}
               >

@@ -72,20 +72,20 @@ export const ModalRegistration = ({ active, setActive }) => {
       },
     }).then((data) => {
       setLoader(false);
-        if (!data) {
-          showNotification({
-            show: true,
-            text: "Аккаунт с таким логином или email уже существует",
-            type: "error",
-          });
-        } else {
-          closeModal();
-          showNotification({
-            show: true,
-            text: "Аккаунт успешно создан",
-            type: "success",
-          });
-        }
+      if (!data) {
+        showNotification({
+          show: true,
+          text: "Аккаунт с таким логином или email уже существует",
+          type: "error",
+        });
+      } else {
+        closeModal();
+        showNotification({
+          show: true,
+          text: "Аккаунт успешно создан",
+          type: "success",
+        });
+      }
     });
     setTimeout(() => {
       closeModal();

@@ -71,10 +71,10 @@ export const TrackerModal = ({
   const [selectWorkersOpen, setSelectWorkersOpen] = useState(false);
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectColumnPriority, setSelectColumnPriority] = useState(
-    "Выберите приоритет колонки"
+    "Выберите приоритет колонки",
   );
   const [selectedExecutorTask, setSelectedExecutorTask] = useState(
-    "Выберите исполнителя задачи"
+    "Выберите исполнителя задачи",
   );
   const [selectExecutorTaskOpen, setSelectExecutorTaskOpen] = useState(false);
   const [correctProjectUsers, setCorrectProjectUsers] = useState([]);
@@ -106,8 +106,6 @@ export const TrackerModal = ({
   ];
 
   function createTab() {
-
-
     if (!valueColumn) {
       showNotification({ show: true, text: "Введите название", type: "error" });
       return;
@@ -149,7 +147,7 @@ export const TrackerModal = ({
         user_id: localStorage.getItem("id"),
         column_id: selectedTab,
         execution_priority: selectedPriority ? selectedPriority.key : 0,
-        // todo а нужно ли это поле? 
+        // todo а нужно ли это поле?
         // priority: priorityTask,
         dead_line: deadLineDate ? getCorrectRequestDate(deadLineDate) : "",
       },
@@ -189,14 +187,13 @@ export const TrackerModal = ({
             setSelectedExecutorTask("Выберите исполнителя задачи");
             setSelectedPriority(null);
           });
-
         } else {
           setActive(false);
           setValueTiket("");
           setDescriptionTicket("");
           dispatch(setProjectBoardFetch(projectBoard.id));
         }
-        
+
         setDeadLineDate("");
         showNotification({
           show: true,
@@ -322,7 +319,7 @@ export const TrackerModal = ({
             persons.reduce((acc, cur) => {
               if (!ids.includes(cur.user_id)) acc.push(cur);
               return acc;
-            }, [])
+            }, []),
           );
         })
       : "";
@@ -330,7 +327,7 @@ export const TrackerModal = ({
       localStorage.getItem("role_status") !== "18" &&
       projectUsers &&
       Boolean(
-        !projectUsers.find((item) => item.user_id === profileInfo.id_user)
+        !projectUsers.find((item) => item.user_id === profileInfo.id_user),
       )
     ) {
       setCorrectProjectUsers([
@@ -356,7 +353,7 @@ export const TrackerModal = ({
         projectMarks.reduce((acc, cur) => {
           if (!tagIds.includes(cur.id)) acc.push(cur);
           return acc;
-        }, [])
+        }, []),
       );
     }
   }, [taskTags, projectMarks]);
@@ -374,7 +371,7 @@ export const TrackerModal = ({
         (div) =>
           div.classList &&
           (div.classList.contains("tags__selected__name") ||
-            div.classList.contains("tags__dropDown"))
+            div.classList.contains("tags__dropDown")),
       )
     ) {
       setSelectTagsOpen(false);
@@ -386,7 +383,7 @@ export const TrackerModal = ({
         (div) =>
           div.classList &&
           (div.classList.contains("select__executor") ||
-            div.classList.contains("select__executor__dropDown"))
+            div.classList.contains("select__executor__dropDown")),
       )
     ) {
       setSelectExecutorTaskOpen(false);
@@ -561,8 +558,8 @@ export const TrackerModal = ({
                               onClick={() =>
                                 setTaskTags((prevState) =>
                                   prevState.filter(
-                                    (prevTag) => prevTag.id !== tag.id
-                                  )
+                                    (prevTag) => prevTag.id !== tag.id,
+                                  ),
                                 )
                               }
                             />

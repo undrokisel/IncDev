@@ -87,8 +87,7 @@ const AuthForDevelopers = () => {
 
                 <div className="auth-developers__info-container">
                   <div className="auth-developers__info-img">
-                    <div>
-                    </div>
+                    <div></div>
                     <div>
                       {/* <img className='auth-specialists} src={specialists} alt="" /> */}
                       {/* <p className="auth-developers__specialists">
@@ -96,8 +95,6 @@ const AuthForDevelopers = () => {
                       </p> */}
                     </div>
                   </div>
-
-                  
                 </div>
 
                 {/* <img className="auth-developers__img-text" src={text} alt="" /> */}

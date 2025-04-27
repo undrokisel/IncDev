@@ -14,7 +14,7 @@ export const Results = () => {
   useEffect(() => {
     dispatch(fetchResultTest(test.uuid));
     apiRequest(
-      `/user-questionnaire/get-points-number?user_questionnaire_uuid=${test.uuid}`
+      `/user-questionnaire/get-points-number?user_questionnaire_uuid=${test.uuid}`,
     ).then((res) => setMaxScore(res.sum_point));
   }, [apiRequest, dispatch, test]);
 

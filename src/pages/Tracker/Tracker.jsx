@@ -60,8 +60,8 @@ export const Tracker = () => {
     // запрос проектов
     apiRequest(
       `/projects/projects-list?user_id=${localStorage.getItem(
-        "id"
-      )}&expand=columns`
+        "id",
+      )}&expand=columns`,
     ).then((el) => {
       // все архивные (законченные) таски в локальный стейт
       // setAllCompletedTasks(
@@ -89,7 +89,7 @@ export const Tracker = () => {
 
     // запрос задач
     apiRequest(
-      `/task/get-user-tasks?user_id=${localStorage.getItem("id")}&expand=timers`
+      `/task/get-user-tasks?user_id=${localStorage.getItem("id")}&expand=timers`,
     ).then((el) => {
       // 0 архивный статус
       const allTasks = el ? el.filter((item) => item.status !== 0) : [];
@@ -121,7 +121,7 @@ export const Tracker = () => {
         ) {
           return item;
         }
-      })
+      }),
     );
   }
 
@@ -139,7 +139,7 @@ export const Tracker = () => {
         ) {
           return item;
         }
-      })
+      }),
     );
   }
 
@@ -354,17 +354,15 @@ export const Tracker = () => {
             }
           >
             <div className="archive__tasks">
-
-
               {/* Архив задач заголовок */}
               <div className="archive__title">
                 <h3>Архив задач:</h3>
                 <p>
                   {`${filterCompleteTasks && filterCompleteTasks.length} 
                     ${caseOfNum(
-                    filterCompleteTasks && filterCompleteTasks.length,
-                    "tasks"
-                  )}`}
+                      filterCompleteTasks && filterCompleteTasks.length,
+                      "tasks",
+                    )}`}
                 </p>
 
                 <div className="archive__tasks-period">
@@ -399,7 +397,6 @@ export const Tracker = () => {
                 loader={loader}
                 filterCompleteTasks={filterCompleteTasks}
               />
-
             </div>
 
             {/* Архив проектов */}
@@ -407,18 +404,19 @@ export const Tracker = () => {
               <div className="archive__projects-title">
                 <h3>Архив проектов:</h3>
                 <p>
-                  {`${projects?.filter((project) => project.status === 10).length
-                    } 
+                  {`${
+                    projects?.filter((project) => project.status === 10).length
+                  } 
                      ${caseOfNum(
-                      projects?.filter((project) => project.status === 10)
-                        .length,
-                      "projects"
-                    )}`}
+                       projects?.filter((project) => project.status === 10)
+                         .length,
+                       "projects",
+                     )}`}
                 </p>
               </div>
               <div className="archive__tasksWrapper">
                 {Boolean(
-                  projects?.filter((project) => project.status === 10).length
+                  projects?.filter((project) => project.status === 10).length,
                 ) ? (
                   projects?.map((project, index) => {
                     return project.status === 10 ? (
@@ -432,14 +430,17 @@ export const Tracker = () => {
                           </p>
                           {/* old */}
                           {/* <p className="date">{project.date}</p> */}
-                          <p className="date">{project.created_at.slice(0,10)}</p>
-
+                          <p className="date">
+                            {project.created_at.slice(0, 10)}
+                          </p>
                         </div>
                         <div className="archive__completeTask__creator">
                           <img src={mockAvatar} alt="#" />
                           <div className="creator-title">
                             <h4>Создатель проекта:</h4>
-                            <p>{ project.owner ?? "Тестовый аккаунт заглушка"}</p>
+                            <p>
+                              {project.owner ?? "Тестовый аккаунт заглушка"}
+                            </p>
                           </div>
                         </div>
                       </div>

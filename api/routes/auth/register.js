@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 // ---------------------------api/register/sign-up-----------------
 // ----------------------------------------------------------------
 
-  router.post(`/`, async (req, res) => {
+router.post(`/`, async (req, res) => {
   try {
     const { email, username, password } = req.body;
     // проверка существования пользователя.

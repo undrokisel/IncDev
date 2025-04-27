@@ -27,9 +27,10 @@ import avatarMok from "assets/images/avatarMok.png";
 import { ProfileCalendarComponent } from "./ProfileCalendarComponent";
 import "./profileCalendar.scss";
 
-import { 
+import {
   // profileInfo,
-   reportsMock } from "@store/profile";
+  reportsMock,
+} from "@store/profile";
 
 export const ProfileCalendar = () => {
   if (localStorage.getItem("role_status") === "18") {
@@ -137,7 +138,6 @@ export const ProfileCalendar = () => {
             </button>
           </Link>
         </div>
-
 
         {loader ? (
           <div className="loader__wrapper">

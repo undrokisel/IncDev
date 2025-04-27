@@ -42,7 +42,9 @@ export const SideBar = () => {
 
       <div className={active ? "auth-body active" : "auth-body"}>
         <div className="auth-body__title">
-          <h1 className="">Inc<span>Dev</span></h1>
+          <h1 className="">
+            Inc<span>Dev</span>
+          </h1>
         </div>
         <ul className="auth-body__navigation">
           <li>
@@ -54,9 +56,7 @@ export const SideBar = () => {
           <li>
             <Link to={"/tracker-intro"}>Трекер</Link>
           </li>
-          <li>
-            {/* <a href="#">Контакты</a> */}
-          </li>
+          <li>{/* <a href="#">Контакты</a> */}</li>
           <li>
             <Link to={"/blog"}>Блог</Link>
           </li>

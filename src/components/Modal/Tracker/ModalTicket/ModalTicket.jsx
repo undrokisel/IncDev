@@ -70,15 +70,14 @@ export const ModalTiсket = ({
   const [deadLine, setDeadLine] = useState(task.dead_line);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [startDate, setStartDate] = useState(
-    task.dead_line ? new Date(task.dead_line) : new Date()
+    task.dead_line ? new Date(task.dead_line) : new Date(),
   );
   const [dropListOpen, setDropListOpen] = useState(false);
   const [dropListMembersOpen, setDropListMembersOpen] = useState(false);
 
   const [executor, setExecutor] = useState(task.executor);
-  // todo execution_priotity ? 
+  // todo execution_priotity ?
   const [taskPriority, setTaskPriority] = useState(task.execution_priority);
-
 
   // members - исполнители задачи
   const [members, setMembers] = useState(projectUsers);
@@ -197,7 +196,7 @@ export const ModalTiсket = ({
 
   function commentDelete(comment) {
     setComments((prevValue) =>
-      prevValue.filter((item) => item.id !== comment.id)
+      prevValue.filter((item) => item.id !== comment.id),
     );
     if (comment.subComments.length) {
       // promiseAll
@@ -208,7 +207,7 @@ export const ModalTiсket = ({
             comment_id: subComment.id,
             status: 0,
           },
-        }).then(() => { });
+        }).then(() => {});
       });
     }
   }
@@ -223,16 +222,16 @@ export const ModalTiсket = ({
   //   setComments(addSubComment);
 
   function addSubComment(commentId, subComment) {
-    setComments(prevComments =>
-      prevComments.map(comment => {
+    setComments((prevComments) =>
+      prevComments.map((comment) => {
         if (comment.id === commentId) {
           return {
             ...comment,
-            subComments: [...comment.subComments, subComment]
+            subComments: [...comment.subComments, subComment],
           };
         }
         return comment;
-      })
+      }),
     );
   }
 
@@ -241,7 +240,7 @@ export const ModalTiсket = ({
     deleteSubComment.forEach((comment, index) => {
       if (comment.id === subComment.parent_id) {
         deleteSubComment[index].subComments = comment.subComments.filter(
-          (item) => item.id !== subComment.id
+          (item) => item.id !== subComment.id,
         );
       }
     });
@@ -333,7 +332,6 @@ export const ModalTiсket = ({
 
     setDropListMembersOpen(false);
     // setMembers((prevValue) => [...prevValue, res]);
-
   }
 
   function deleteMember(person) {
@@ -356,13 +354,12 @@ export const ModalTiсket = ({
 
     // заход за комментариями
     apiRequest(
-      `/comment/get-by-entity?entity_type=2&entity_id=${task.id}`
+      `/comment/get-by-entity?entity_type=2&entity_id=${task.id}`,
     ).then((res) => {
-
       // reduceRight - потому что данные приходят отсортированными от самых свежих, а мы будем перебирать от самых старых
       const comments = res
         // убираем "псевдоудаленные" комментарии
-        .filter(comment => comment.status !== 0)
+        .filter((comment) => comment.status !== 0)
         .reduceRight((acc, comment) => {
           if (!comment.parent_id) {
             acc.push({ ...comment, subComments: [] });
@@ -381,7 +378,6 @@ export const ModalTiсket = ({
     // заход за таймерами
     apiRequest(`/timer/get-by-entity?entity_type=2&entity_id=${task.id}`).then(
       (res) => {
-
         let timerSeconds = 0;
         res.length &&
           res.forEach((time) => {
@@ -400,7 +396,7 @@ export const ModalTiсket = ({
               setTimerInfo(time);
             }
           });
-      }
+      },
     );
 
     // заход за файлами
@@ -409,18 +405,18 @@ export const ModalTiсket = ({
         if (Array.isArray(res)) {
           setTaskFiles(res);
         }
-      }
+      },
     );
 
     // получение из стора (profileInfo) пользователей проекта
     if (
       // если пользователь - разработчик
       localStorage.getItem("role_status") !== "18" &&
-      // и его еще нет среди пользователей проекта? 
+      // и его еще нет среди пользователей проекта?
       Boolean(
         !correctProjectUsers.find(
-          (item) => item.user_id === profileInfo.id_user
-        )
+          (item) => item.user_id === profileInfo.id_user,
+        ),
       )
     ) {
       // то добавляем его в пользователи проекта
@@ -443,7 +439,7 @@ export const ModalTiсket = ({
       projectMarks.reduce((acc, cur) => {
         if (!tagIds.includes(cur.id)) acc.push(cur);
         return acc;
-      }, [])
+      }, []),
     );
   }, [taskTags]);
 
@@ -483,7 +479,7 @@ export const ModalTiсket = ({
 
   function deleteFile(file) {
     setTaskFiles((prevValue) =>
-      prevValue.filter((item) => item.id !== file.id)
+      prevValue.filter((item) => item.id !== file.id),
     );
   }
 
@@ -491,7 +487,7 @@ export const ModalTiсket = ({
     setTimerId(
       setInterval(() => {
         run();
-      }, 1000)
+      }, 1000),
     );
   }
 
@@ -524,19 +520,18 @@ export const ModalTiсket = ({
 
   useEffect(() => {
     let ids = members.map((user) => user.id);
-  
+
     setUsers(
       projectUsers.reduce((acc, user) => {
         if (!ids.includes(user.userCard[0].id_user)) acc.push(user);
         return acc;
-      }, [])
+      }, []),
     );
   }, [members]);
 
-
   function copyTicketLink() {
     navigator.clipboard.writeText(
-      `https://IncDev.info/tracker/task/${task.id}`
+      `https://IncDev.info/tracker/task/${task.id}`,
     );
     showNotification({
       show: true,
@@ -603,7 +598,7 @@ export const ModalTiсket = ({
         (div) =>
           div.classList &&
           (div.classList.contains("button-add-worker") ||
-            div.classList.contains("dropdownList"))
+            div.classList.contains("dropdownList")),
       )
     ) {
       setDropListOpen(false);
@@ -616,7 +611,7 @@ export const ModalTiсket = ({
         (div) =>
           div.classList &&
           (div.classList.contains("deadLine") ||
-            div.classList.contains("react-datepicker-popper"))
+            div.classList.contains("react-datepicker-popper")),
       )
     ) {
       setDatePickerOpen(false);
@@ -628,7 +623,7 @@ export const ModalTiсket = ({
         (div) =>
           div.classList &&
           (div.classList.contains("tags") ||
-            div.classList.contains("tags__dropDown"))
+            div.classList.contains("tags__dropDown")),
       )
     ) {
       setSelectTagsOpen(false);
@@ -644,7 +639,6 @@ export const ModalTiсket = ({
     >
       <div className="modal-tiket__content">
         <div className="content">
-
           {/* Название проекта, заголовок */}
           <h3 className="title-project">
             <img src={category} className="title-project__category"></img>
@@ -657,10 +651,7 @@ export const ModalTiсket = ({
             </Link>
           </h3>
 
-
           <div className="content__task">
-
-
             {/* поле редактирования заголовка задачи */}
             {editOpen ? (
               <input
@@ -678,7 +669,6 @@ export const ModalTiсket = ({
             )}
 
             <div className="content__description">
-
               {/* поле редактирования описания задачи */}
               {editOpen ? (
                 <CKEditor
@@ -714,7 +704,6 @@ export const ModalTiсket = ({
               )}
               {/*<img src={taskImg} className="image-task"></img>*/}
             </div>
-
 
             {/* Файл трекер */}
             {Boolean(taskFiles.length) && (
@@ -767,7 +756,6 @@ export const ModalTiсket = ({
               {/*  </button>*/}
               {/*</p>*/}
 
-
               {/* Кнопка загрузки файлов и количество файлов */}
               <div className="file">
                 <div className="input__wrapper">
@@ -789,7 +777,6 @@ export const ModalTiсket = ({
               </div>
             </div>
 
-
             {/* Поле - оставить комментарий */}
             <div className="content__input">
               <input
@@ -809,7 +796,6 @@ export const ModalTiсket = ({
               ></img>
             </div>
 
-
             {/* Список комментариев */}
             <div className="comments__list">
               {comments.map((comment) => {
@@ -825,8 +811,6 @@ export const ModalTiсket = ({
                 );
               })}
             </div>
-
-
           </div>
         </div>
         <div className="workers">
@@ -834,19 +818,19 @@ export const ModalTiсket = ({
             <span className="exit" onClick={() => setActive(false)}></span>
             <p className="workers__creator">Создатель : {task.user?.fio}</p>
 
+            {/* Исполнитель */}
 
-              {/* Исполнитель */}
-
-              {console.log("--------------------executor----------------------")}
+            {console.log("--------------------executor----------------------")}
             {console.log(executor)}
-
 
             {executor ? (
               <div className="executor">
                 <p>Исполнитель: {executor?.userCard[0]?.fio}</p>
                 <img
                   src={
-                    executor?.userCard[0]?.avatar ? urlForLocal(executor?.userCard[0]?.avatar) : avatarMok
+                    executor?.userCard[0]?.avatar
+                      ? urlForLocal(executor?.userCard[0]?.avatar)
+                      : avatarMok
                   }
                   alt="avatar"
                 />
@@ -903,7 +887,6 @@ export const ModalTiсket = ({
               <div className="members">
                 <p>Участники:</p>
                 <div className="members__list">
-
                   {members.map((member) => {
                     return (
                       <div className="worker" key={member?.userCard[0]?.id}>
@@ -1147,7 +1130,7 @@ export const ModalTiсket = ({
               onClick={archiveTask}
               className={
                 profileInfo.id_user === projectOwnerId ||
-                  profileInfo.id_user === task.user_id
+                profileInfo.id_user === task.user_id
                   ? ""
                   : "disable"
               }
@@ -1159,7 +1142,7 @@ export const ModalTiсket = ({
               onClick={deleteTask}
               className={
                 profileInfo.id_user === projectOwnerId ||
-                  profileInfo.id_user === task.user_id
+                profileInfo.id_user === task.user_id
                   ? ""
                   : "disable"
               }

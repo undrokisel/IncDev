@@ -33,8 +33,8 @@ export const PartnerRequests = () => {
   useEffect(() => {
     apiRequest(
       `/request/get-request-list?user_id=${localStorage.getItem(
-        "id"
-      )}&search_depth=3`
+        "id",
+      )}&search_depth=3`,
     ).then((el) => {
       setRequests(el);
       setLoader(false);

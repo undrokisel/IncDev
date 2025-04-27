@@ -12,8 +12,6 @@ import "./blog.scss";
 import { articles } from "@store/blog";
 
 export const Blog = () => {
-  
-
   return (
     <div className="blog">
       <AuthHeader />
@@ -35,9 +33,7 @@ export const Blog = () => {
             <img src={blogArrow} className="blog__title-arrow" />
           </div>
 
-          <h3>
-            Рассказываем о компании, делимся полезными материалами
-          </h3>
+          <h3>Рассказываем о компании, делимся полезными материалами</h3>
         </div>
 
         <div className="blog__body">

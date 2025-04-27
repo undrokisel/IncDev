@@ -31,7 +31,6 @@ const Outstaffing = () => {
   const positionId = useSelector(getPositionId);
   const tagsArr = useSelector(selectTags);
 
-
   const onSelectPosition = createSelectPositionHandler({
     positionId,
     setPositionId,

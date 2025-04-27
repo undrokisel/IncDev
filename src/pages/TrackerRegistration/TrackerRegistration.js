@@ -52,7 +52,8 @@ export const TrackerRegistration = () => {
               <div className="trackerRegistration__form__info">
                 {/* <img src={authImg} alt="img" /> */}
                 <p>
-                  Здесь можно создать и контролировать ведение проектов совместно с другими участниками
+                  Здесь можно создать и контролировать ведение проектов
+                  совместно с другими участниками
                 </p>
               </div>
             </div>

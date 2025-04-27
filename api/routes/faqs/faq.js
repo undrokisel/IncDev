@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 
 // faq/
 router.get(`/:id`, async (req, res) => {
-    const faq = await prisma.faq.findFirst({
-      where: {
-        id: Number(req.params.id),
-      },
-    });
-    res.json(faq);
+  const faq = await prisma.faq.findFirst({
+    where: {
+      id: Number(req.params.id),
+    },
   });
-  
+  res.json(faq);
+});
+
 module.exports = router;

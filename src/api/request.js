@@ -22,7 +22,7 @@ export const apiRequest = (
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     },
-  } = {}
+  } = {},
 ) => {
   const fullHeaders = { ...headers, ...getToken() };
   let urWithParams = urlHasParams(url);
@@ -37,7 +37,6 @@ export const apiRequest = (
     })
     .then(
       (response) =>
-            
         new Promise((resolve) => {
           if (response.data?.redirect || response.status === 401) {
             window.location.replace("/auth");
@@ -45,7 +44,7 @@ export const apiRequest = (
             // dispatch(auth(false));
           }
           return resolve(response);
-        })
+        }),
     )
     .then((response) => new Promise((resolve) => resolve(response.data)));
 };

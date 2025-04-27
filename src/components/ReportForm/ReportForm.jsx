@@ -43,7 +43,7 @@ const ReportForm = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [reportSuccess, setReportSuccess] = useState("");
   const [startDate, setStartDate] = useState(
-    reportDate ? new Date(reportDate._d) : new Date()
+    reportDate ? new Date(reportDate._d) : new Date(),
   );
   const [datePickerOpen, setDatePickerOpen] = useState(false);
 
@@ -73,7 +73,7 @@ const ReportForm = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("report-form__block-img") ||
-            div.classList.contains("react-datepicker-popper"))
+            div.classList.contains("react-datepicker-popper")),
       )
     ) {
       setDatePickerOpen(false);
@@ -94,7 +94,6 @@ const ReportForm = () => {
         return;
       }
     }
-
 
     // apiRequest("/reports/create", {
     //   method: "POST",
@@ -128,8 +127,6 @@ const ReportForm = () => {
     setScheduledInputValue("");
     setIsFetching(false);
     setInputs(() => [{ task: "", hours_spent: "", minutes_spent: 0 }]);
-
-
   };
 
   return (
@@ -227,7 +224,7 @@ const ReportForm = () => {
                                     task: e.target.value,
                                   }
                                 : input;
-                            })
+                            }),
                           )
                         }
                       />
@@ -253,7 +250,7 @@ const ReportForm = () => {
                                     hours_spent: Number(e.target.value),
                                   }
                                 : input;
-                            })
+                            }),
                           )
                         }
                       />

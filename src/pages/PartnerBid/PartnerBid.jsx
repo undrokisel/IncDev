@@ -140,8 +140,8 @@ export const PartnerBid = () => {
                       partnerRequests[
                         partnerRequests.findIndex((el) => el.id === requestId) -
                           1
-                      ].id
-                    )
+                      ].id,
+                    ),
                   );
                 }}
               >
@@ -162,8 +162,8 @@ export const PartnerBid = () => {
                       partnerRequests[
                         partnerRequests.findIndex((el) => el.id === requestId) +
                           1
-                      ].id
-                    )
+                      ].id,
+                    ),
                   );
                 }}
               >

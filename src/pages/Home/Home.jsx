@@ -43,30 +43,26 @@ const Home = () => {
       const tempTags = values.map((value, index) =>
         value.map((val) => {
           return { id: val.id, value: val.tags, name: keys[index] };
-        })
+        }),
       );
       dispatch(tags(tempTags));
     });
 
+    // const skills = {
+    //   skills_front: [{id: 1, tags: 'frontend'}],
+    //   skills_back: [{id: 2, tags: 'backend'}],
+    //   skills_design: [{id: 3, tags: 'design'}],
+    // }
+    // const keys = Object.keys(skills);
+    // const values = Object.values(skills);
 
-      // const skills = {
-      //   skills_front: [{id: 1, tags: 'frontend'}], 
-      //   skills_back: [{id: 2, tags: 'backend'}],  
-      //   skills_design: [{id: 3, tags: 'design'}],
-      // }
-      // const keys = Object.keys(skills);
-      // const values = Object.values(skills);
-
-      // const tempTags = values.map((value, index) =>
-      //   value.map((val) => {
-      //     return { id: val.id, value: val.tags, name: keys[index] };
-      //   })
-      // );
-      // dispatch(tags(tempTags));
-
-
+    // const tempTags = values.map((value, index) =>
+    //   value.map((val) => {
+    //     return { id: val.id, value: val.tags, name: keys[index] };
+    //   })
+    // );
+    // dispatch(tags(tempTags));
   }, [index]);
-
 
   const loadMore = (count) => {
     setIndex((prev) => prev + count);

@@ -92,6 +92,6 @@ export function caseOfNum(number, type) {
 
 export function copyProjectLink(projectId) {
   navigator.clipboard.writeText(
-    `https://IncDev.info/tracker/project/${projectId}`
+    `https://IncDev.info/tracker/project/${projectId}`,
   );
 }

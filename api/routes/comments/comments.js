@@ -25,13 +25,13 @@ router.get("/get-by-entity", async (req, res) => {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
+            userCard: true,
+          },
+        },
       },
       orderBy: {
-        created_at: 'desc'
-      }
+        created_at: "desc",
+      },
     });
 
     res.json(comments);
@@ -46,7 +46,7 @@ router.get("/:taskId", async (req, res) => {
   try {
     const taskId = parseInt(req.params.taskId);
 
-    if (req.params.taskId === 'get-by-entity') {
+    if (req.params.taskId === "get-by-entity") {
       return next(); // Пропустить запрос дальше
     }
 
@@ -56,20 +56,20 @@ router.get("/:taskId", async (req, res) => {
 
     const comments = await prisma.comment.findMany({
       where: {
-        taskId: taskId
+        taskId: taskId,
       },
       include: {
         user: {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
+            userCard: true,
+          },
+        },
       },
       orderBy: {
-        created_at: 'asc'
-      }
+        created_at: "asc",
+      },
     });
 
     res.json(comments);
@@ -94,8 +94,8 @@ router.post("/", async (req, res) => {
         userId: parseInt(userId),
         taskId: parseInt(taskId),
         parent_id: parent_id ? parseInt(parent_id) : null,
-        subComments: []
-      }
+        subComments: [],
+      },
     });
 
     res.status(201).json(comment);
@@ -109,7 +109,7 @@ router.post("/", async (req, res) => {
 router.put("/update", async (req, res) => {
   try {
     const { comment_id, text, status } = req.body;
-    
+
     if (!comment_id) {
       return res.status(400).json({ error: "Missing comment_id" });
     }
@@ -117,21 +117,23 @@ router.put("/update", async (req, res) => {
     // Если это удаление подкомментария (status = 0)
     if (status === 0) {
       const comment = await prisma.comment.findUnique({
-        where: { id: parseInt(comment_id) }
+        where: { id: parseInt(comment_id) },
       });
 
       // Если это подкомментарий
       if (comment.parent_id) {
         const parentComment = await prisma.comment.findUnique({
-          where: { id: comment.parent_id }
+          where: { id: comment.parent_id },
         });
 
         // Удаляем ID подкомментария из массива subComments родителя
         await prisma.comment.update({
           where: { id: comment.parent_id },
           data: {
-            subComments: parentComment.subComments.filter(id => id !== comment.id)
-          }
+            subComments: parentComment.subComments.filter(
+              (id) => id !== comment.id,
+            ),
+          },
         });
       }
     }
@@ -140,10 +142,10 @@ router.put("/update", async (req, res) => {
     const updateData = {};
     if (text !== undefined) updateData.text = text;
     if (status !== undefined) updateData.status = status;
-    
+
     const updatedComment = await prisma.comment.update({
       where: {
-        id: parseInt(comment_id)
+        id: parseInt(comment_id),
       },
       data: updateData,
       include: {
@@ -151,12 +153,12 @@ router.put("/update", async (req, res) => {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
-      }
+            userCard: true,
+          },
+        },
+      },
     });
-    
+
     res.json(updatedComment);
   } catch (error) {
     console.error("Ошибка при обновлении комментария:", error);
@@ -168,25 +170,25 @@ router.put("/update", async (req, res) => {
 router.delete("/delete-comment", async (req, res) => {
   try {
     const { commentId } = req.body;
-    
+
     if (!commentId) {
       return res.status(400).json({ error: "Missing commentId" });
     }
-    
+
     // Сначала удаляем все дочерние комментарии
     await prisma.comment.deleteMany({
       where: {
-        parent_id: parseInt(commentId)
-      }
+        parent_id: parseInt(commentId),
+      },
     });
-    
+
     // Затем удаляем сам комментарий
     await prisma.comment.delete({
       where: {
-        id: parseInt(commentId)
-      }
+        id: parseInt(commentId),
+      },
     });
-    
+
     res.json({ success: true });
   } catch (error) {
     console.error("Ошибка при удалении комментария:", error);
@@ -198,42 +200,42 @@ router.delete("/delete-comment", async (req, res) => {
 router.post("/reply-comment", async (req, res) => {
   try {
     const { taskId, userId, text, parent_id } = req.body;
-    
+
     if (!taskId || !userId || !text || !parent_id) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    
+
     // Создаем новый комментарий-ответ
     const comment = await prisma.comment.create({
       data: {
         text,
         userId: parseInt(userId),
         taskId: parseInt(taskId),
-        parent_id: parseInt(parent_id)
+        parent_id: parseInt(parent_id),
       },
       include: {
         user: {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
-      }
+            userCard: true,
+          },
+        },
+      },
     });
 
     // Обновляем массив subComments родительского комментария
     const parentComment = await prisma.comment.findUnique({
-      where: { id: parseInt(parent_id) }
+      where: { id: parseInt(parent_id) },
     });
 
     await prisma.comment.update({
       where: { id: parseInt(parent_id) },
       data: {
-        subComments: [...parentComment.subComments, comment.id]
-      }
+        subComments: [...parentComment.subComments, comment.id],
+      },
     });
-    
+
     res.status(201).json(comment);
   } catch (error) {
     console.error("Ошибка при создании ответа на комментарий:", error);
@@ -245,13 +247,13 @@ router.post("/reply-comment", async (req, res) => {
 router.get("/get-sub-comments", async (req, res) => {
   try {
     const commentId = parseInt(req.query.comment_id);
-    
+
     if (!commentId) {
       return res.status(400).json({ error: "Missing comment_id" });
     }
-    
+
     const parentComment = await prisma.comment.findUnique({
-      where: { id: commentId }
+      where: { id: commentId },
     });
 
     if (!parentComment) {
@@ -261,23 +263,23 @@ router.get("/get-sub-comments", async (req, res) => {
     const subComments = await prisma.comment.findMany({
       where: {
         id: {
-          in: parentComment.subComments
-        }
+          in: parentComment.subComments,
+        },
       },
       include: {
         user: {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
+            userCard: true,
+          },
+        },
       },
       orderBy: {
-        created_at: 'asc'
-      }
+        created_at: "asc",
+      },
     });
-    
+
     res.json(subComments);
   } catch (error) {
     console.error("Ошибка при получении дочерних комментариев:", error);
@@ -289,17 +291,17 @@ router.get("/get-sub-comments", async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     const { text, entity_type, entity_id, parent_id } = req.body;
-    
+
     // Получаем токен из заголовка
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    
+
     // Декодируем JWT токен
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     const userId = decoded.id;
-    
+
     if (!text || !entity_type || !entity_id) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -314,40 +316,40 @@ router.post("/create", async (req, res) => {
         updated_at: new Date(),
         user: {
           connect: {
-            id: parseInt(userId)
-          }
+            id: parseInt(userId),
+          },
         },
         task: {
           connect: {
-            id: parseInt(entity_id)
-          }
-        }
+            id: parseInt(entity_id),
+          },
+        },
       },
       include: {
         user: {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
-      }
+            userCard: true,
+          },
+        },
+      },
     });
 
     // Если это подкомментарий, обновляем массив subComments родительского комментария
     if (parent_id) {
       const parentComment = await prisma.comment.findUnique({
-        where: { id: parseInt(parent_id) }
+        where: { id: parseInt(parent_id) },
       });
 
       await prisma.comment.update({
         where: { id: parseInt(parent_id) },
         data: {
-          subComments: [...parentComment.subComments, comment.id]
-        }
+          subComments: [...parentComment.subComments, comment.id],
+        },
       });
     }
-    
+
     res.status(201).json(comment);
   } catch (error) {
     console.error("Ошибка при создании комментария:", error);
@@ -355,4 +357,4 @@ router.post("/create", async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

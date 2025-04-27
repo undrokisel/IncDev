@@ -123,7 +123,6 @@ export const TicketFullScreen = () => {
   useEffect(() => {
     initListeners();
 
-
     apiRequest(`/task/get-task?task_id=${ticketId.id}&expand=mark`).then(
       (taskInfo) => {
         setTaskInfo(taskInfo);
@@ -131,7 +130,7 @@ export const TicketFullScreen = () => {
         setDeadLine(taskInfo.dead_line);
         setTaskPriority(taskInfo.execution_priority);
         setStartDate(
-          taskInfo.dead_line ? new Date(taskInfo.dead_line) : new Date()
+          taskInfo.dead_line ? new Date(taskInfo.dead_line) : new Date(),
         );
         setInputsValue({
           title: taskInfo.title,
@@ -141,7 +140,7 @@ export const TicketFullScreen = () => {
         setTaskTags(taskInfo.mark);
 
         apiRequest(
-          `/comment/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
+          `/comment/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`,
         ).then((res) => {
           const comments = res.reduce((acc, cur) => {
             if (!cur.parent_id) {
@@ -157,7 +156,7 @@ export const TicketFullScreen = () => {
         });
 
         apiRequest(
-          `/file/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
+          `/file/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`,
         ).then((res) => {
           if (Array.isArray(res)) {
             setTaskFiles(res);
@@ -188,13 +187,13 @@ export const TicketFullScreen = () => {
         // });
 
         apiRequest(
-          `/project/get-project?project_id=${taskInfo.project_id}&expand=columns,mark`
+          `/project/get-project?project_id=${taskInfo.project_id}&expand=columns,mark`,
         ).then((res) => {
           setProjectInfo(res);
           setCorrectProjectUsers(res.projectUsers);
         });
         setLoader(boardLoader);
-      }
+      },
     );
 
     setTaskInfo(taskInfo);
@@ -202,7 +201,7 @@ export const TicketFullScreen = () => {
     setDeadLine(taskInfo.dead_line);
     setTaskPriority(taskInfo.execution_priority);
     setStartDate(
-      taskInfo.dead_line ? new Date(taskInfo.dead_line) : new Date()
+      taskInfo.dead_line ? new Date(taskInfo.dead_line) : new Date(),
     );
     setInputsValue({
       title: taskInfo.title,
@@ -220,10 +219,9 @@ export const TicketFullScreen = () => {
     setTimerStart(true);
     startTimer();
     // setTimerInfo(time);
-    setProjectInfo('res');
-    setCorrectProjectUsers('projectUsers');
+    setProjectInfo("res");
+    setCorrectProjectUsers("projectUsers");
     setLoader(boardLoader);
-
   }, []);
 
   useEffect(() => {
@@ -233,7 +231,7 @@ export const TicketFullScreen = () => {
         projectInfo.mark.reduce((acc, cur) => {
           if (!tagIds.includes(cur.id)) acc.push(cur);
           return acc;
-        }, [])
+        }, []),
       );
     }
   }, [taskTags, projectInfo]);
@@ -341,7 +339,7 @@ export const TicketFullScreen = () => {
 
   function commentDelete(comment) {
     setComments((prevValue) =>
-      prevValue.filter((item) => item.id !== comment.id)
+      prevValue.filter((item) => item.id !== comment.id),
     );
     if (comment?.subComments?.length) {
       comment.subComments.forEach((subComment) => {
@@ -351,7 +349,7 @@ export const TicketFullScreen = () => {
             comment_id: subComment.id,
             status: 0,
           },
-        }).then(() => { });
+        }).then(() => {});
       });
     }
   }
@@ -371,7 +369,7 @@ export const TicketFullScreen = () => {
     deleteSubComment.forEach((comment, index) => {
       if (comment.id === subComment.parent_id) {
         deleteSubComment[index].subComments = comment.subComments.filter(
-          (item) => item.id !== subComment.id
+          (item) => item.id !== subComment.id,
         );
       }
     });
@@ -384,7 +382,7 @@ export const TicketFullScreen = () => {
 
   function copyTicketLink() {
     navigator.clipboard.writeText(
-      `https://IncDev.info/tracker/task/${taskInfo.id}`
+      `https://IncDev.info/tracker/task/${taskInfo.id}`,
     );
   }
 
@@ -392,7 +390,7 @@ export const TicketFullScreen = () => {
     setTimerId(
       setInterval(() => {
         run();
-      }, 1000)
+      }, 1000),
     );
   }
 
@@ -403,7 +401,7 @@ export const TicketFullScreen = () => {
         projectInfo.projectUsers.reduce((acc, cur) => {
           if (!ids.includes(cur.user_id)) acc.push(cur);
           return acc;
-        }, [])
+        }, []),
       );
     }
   }, [taskInfo.taskUsers, projectInfo]);
@@ -479,7 +477,7 @@ export const TicketFullScreen = () => {
       setTaskInfo((prevState) => ({
         ...prevState,
         taskUsers: taskInfo.taskUsers.filter(
-          (item) => item.user_id !== person.user_id
+          (item) => item.user_id !== person.user_id,
         ),
       }));
     });
@@ -508,7 +506,7 @@ export const TicketFullScreen = () => {
         task_id: taskInfo.id,
         dead_line: getCorrectRequestDate(date),
       },
-    }).then(() => { });
+    }).then(() => {});
   }
 
   async function handleUpload(event) {
@@ -552,7 +550,7 @@ export const TicketFullScreen = () => {
         task_id: taskInfo.id,
         execution_priority: key,
       },
-    }).then(() => { });
+    }).then(() => {});
   }
 
   // function deleteFile(file) {
@@ -573,7 +571,7 @@ export const TicketFullScreen = () => {
 
   function deleteFile(file) {
     setTaskFiles((prevValue) =>
-      prevValue.filter((item) => item.id !== file.id)
+      prevValue.filter((item) => item.id !== file.id),
     );
   }
 
@@ -621,7 +619,7 @@ export const TicketFullScreen = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("button-add-worker") ||
-            div.classList.contains("dropdownList"))
+            div.classList.contains("dropdownList")),
       )
     ) {
       setDropListOpen(false);
@@ -634,7 +632,7 @@ export const TicketFullScreen = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("deadLine") ||
-            div.classList.contains("react-datepicker-popper"))
+            div.classList.contains("react-datepicker-popper")),
       )
     ) {
       setDatePickerOpen(false);
@@ -646,7 +644,7 @@ export const TicketFullScreen = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("tags") ||
-            div.classList.contains("tags__dropDown"))
+            div.classList.contains("tags__dropDown")),
       )
     ) {
       setSelectTagsOpen(false);
@@ -658,7 +656,7 @@ export const TicketFullScreen = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("addPerson") ||
-            div.classList.contains("persons__list"))
+            div.classList.contains("persons__list")),
       )
     ) {
       setPersonListOpen(false);
@@ -1153,7 +1151,7 @@ export const TicketFullScreen = () => {
                     <button
                       className={
                         taskInfo.executor_id ===
-                          Number(localStorage.getItem("id"))
+                        Number(localStorage.getItem("id"))
                           ? "stop"
                           : "stop disable"
                       }
@@ -1165,7 +1163,7 @@ export const TicketFullScreen = () => {
                     <button
                       className={
                         taskInfo.executor_id ===
-                          Number(localStorage.getItem("id"))
+                        Number(localStorage.getItem("id"))
                           ? "start"
                           : "start disable"
                       }
@@ -1179,23 +1177,24 @@ export const TicketFullScreen = () => {
                 <div className="workers_box-tag">
                   <div className="tags">
                     <div className="tags__selected">
-                      {taskTags && taskTags.map((tag) => {
-                        return (
-                          <div
-                            className="tags__selected__item"
-                            key={tag.id}
-                            style={{ background: tag.color }}
-                          >
-                            <p>{tag.slug}</p>
-                            <img
-                              src={close}
-                              className="delete"
-                              alt="delete"
-                              onClick={() => deleteTagFromTask(tag.id)}
-                            />
-                          </div>
-                        );
-                      })}
+                      {taskTags &&
+                        taskTags.map((tag) => {
+                          return (
+                            <div
+                              className="tags__selected__item"
+                              key={tag.id}
+                              style={{ background: tag.color }}
+                            >
+                              <p>{tag.slug}</p>
+                              <img
+                                src={close}
+                                className="delete"
+                                alt="delete"
+                                onClick={() => deleteTagFromTask(tag.id)}
+                              />
+                            </div>
+                          );
+                        })}
                     </div>
                     <div
                       className="tags__select"
@@ -1293,7 +1292,7 @@ export const TicketFullScreen = () => {
                     onClick={archiveTask}
                     className={
                       profileInfo.id_user === projectInfo.owner_id ||
-                        profileInfo.id_user === taskInfo.user_id
+                      profileInfo.id_user === taskInfo.user_id
                         ? ""
                         : "disable"
                     }
@@ -1305,7 +1304,7 @@ export const TicketFullScreen = () => {
                     onClick={deleteTask}
                     className={
                       profileInfo.id_user === projectInfo.owner_id ||
-                        profileInfo.id_user === taskInfo.user_id
+                      profileInfo.id_user === taskInfo.user_id
                         ? ""
                         : "disable"
                     }

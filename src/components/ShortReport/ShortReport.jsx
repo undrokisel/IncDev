@@ -39,7 +39,6 @@ export const ShortReport = () => {
     setTomorrowTask([]);
     setTotalHours(0);
 
-
     // apiRequest(
     //   `reports/find-by-date?user_card_id=${localStorage.getItem(
     //     "cardId"
@@ -71,7 +70,6 @@ export const ShortReport = () => {
     //   setLoader(false);
     // });
 
-
     let spendTime = 0;
     for (const item of res) {
       setDateCreate(item.created_at);
@@ -96,11 +94,6 @@ export const ShortReport = () => {
 
     setTotalHours(spendTime);
     setLoader(false);
-
-
-
-
-
   }
 
   if (sendReport) {

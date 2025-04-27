@@ -16,7 +16,6 @@ import "./description.scss";
 const Description = ({ onLoadMore }) => {
   const candidatesListArr = useSelector(selectProfiles);
 
-
   return (
     <section className="description">
       <div className="container">

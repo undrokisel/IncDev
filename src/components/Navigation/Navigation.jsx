@@ -15,7 +15,7 @@ export const Navigation = () => {
 
   const profileInfo = useSelector(getProfileInfo);
   const [user] = useState(
-    localStorage.getItem("role_status") === "18" ? "partner" : "developer"
+    localStorage.getItem("role_status") === "18" ? "partner" : "developer",
   );
 
   const [navInfo] = useState({
@@ -79,9 +79,9 @@ export const Navigation = () => {
     apiRequest(`/user/me`).then((profileInfo) =>
       dispatch(
         setProfileInfo(
-          profileInfo.userCard ? profileInfo.userCard[0] : profileInfo
-        )
-      )
+          profileInfo.userCard ? profileInfo.userCard[0] : profileInfo,
+        ),
+      ),
     );
   }, [dispatch]);
 

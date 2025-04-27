@@ -103,7 +103,7 @@ export const QuizPage = () => {
 
   useEffect(() => {
     apiRequest(
-      `/user-questionnaire/questionnaires-list?user_id=${userId}`
+      `/user-questionnaire/questionnaires-list?user_id=${userId}`,
     ).then((res) => dispatch(setQuestionnaires(res)));
   }, []);
 

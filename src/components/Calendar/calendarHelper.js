@@ -17,7 +17,7 @@ export function calendarHelper(value) {
     calendar.push(
       Array(1)
         .fill(0)
-        .map(() => day.add(1, "day").clone())
+        .map(() => day.add(1, "day").clone()),
     );
   }
 
@@ -45,7 +45,7 @@ export function getReports(value) {
 export function getCreatedDate(day) {
   if (day) {
     return `${new Date(day).getFullYear()}-${correctDay(
-      new Date(day).getMonth() + 1
+      new Date(day).getMonth() + 1,
     )}-${correctDay(new Date(day).getDate())}`;
   } else {
     const date = new Date();

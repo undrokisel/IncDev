@@ -86,7 +86,7 @@ export const ProfileCalendarComponent = React.memo(
       for (const date of reports) {
         if (
           `${new Date(day).getFullYear()}-${correctDay(
-            new Date(day).getMonth() + 1
+            new Date(day).getMonth() + 1,
           )}-${correctDay(new Date(day).getDate())}` === date.created_at
         ) {
           return `before`;
@@ -101,7 +101,7 @@ export const ProfileCalendarComponent = React.memo(
       for (const date of reports) {
         if (
           `${new Date(day).getFullYear()}-${correctDay(
-            new Date(day).getMonth() + 1
+            new Date(day).getMonth() + 1,
           )}-${correctDay(new Date(day).getDate())}` === date.created_at
         ) {
           return "#";
@@ -122,12 +122,11 @@ export const ProfileCalendarComponent = React.memo(
       const requestDates =
         startDate < endDay
           ? `fromDate=${getCorrectYYMMDD(
-              startDate._d
+              startDate._d,
             )}&toDate=${getCorrectYYMMDD(endDay._d)}`
           : `fromDate=${getCorrectYYMMDD(endDay._d)}&toDate=${getCorrectYYMMDD(
-              startDate._d
+              startDate._d,
             )}`;
-
 
       // apiRequest(
       //   `/reports/reports-by-date?${requestDates}&user_card_id=${localStorage.getItem(
@@ -144,11 +143,11 @@ export const ProfileCalendarComponent = React.memo(
       //     });
       //   }
       //   setTotalRangeHours(spendTime);
-      
+
       // });
 
       let spendTime = 0;
-      alert('sdf')
+      alert("sdf");
       for (const report of reports) {
         report.task.map((task) => {
           if (task.hours_spent) {
@@ -157,8 +156,6 @@ export const ProfileCalendarComponent = React.memo(
         });
       }
       setTotalRangeHours(spendTime);
-
-      
     }
 
     function toggleActivePeriod() {
@@ -315,7 +312,7 @@ export const ProfileCalendarComponent = React.memo(
                     {currentMonthAndDay(day)}
                   </Link>
                 </button>
-              ))
+              )),
             )}
           </div>
         </div>
@@ -333,8 +330,8 @@ export const ProfileCalendarComponent = React.memo(
                 ? `${getCorrectDate(startDate)} - ${getCorrectDate(endDate)}`
                 : `${getCorrectDate(endDate)} - ${getCorrectDate(startDate)}`
               : activePeriod
-              ? "Выберите начало диапазона"
-              : "Выбрать диапазон"}
+                ? "Выберите начало диапазона"
+                : "Выбрать диапазон"}
           </span>
           <span>
             {totalRangeHours
@@ -357,5 +354,5 @@ export const ProfileCalendarComponent = React.memo(
         {shortReport && <ShortReport />}
       </div>
     );
-  }
+  },
 );

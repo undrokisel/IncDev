@@ -128,8 +128,7 @@ const Statistics = () => {
                   <div className="project-info__creator">
                     <span className="return-text">Создатель проекта:</span>
                     <div>
-                      <p>{"Кисель Андрей"}</p>{" "}
-                      <img src={mockAvatar} alt="#" />
+                      <p>{"Кисель Андрей"}</p> <img src={mockAvatar} alt="#" />
                     </div>
                   </div>
                   <div className="project-info__tasks">

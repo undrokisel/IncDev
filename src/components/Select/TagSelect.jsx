@@ -22,7 +22,7 @@ const TagSelect = () => {
   const dispatch = useDispatch();
 
   const itemsArr = useSelector(selectItems);
-  
+
   const tagsArr = useSelector(selectTags);
 
   const handleSubmit = ({ dispatch, setSearchLoading }) => {
@@ -34,7 +34,6 @@ const TagSelect = () => {
 
     const params = filterItemsId ? { skill: filterItemsId } : "";
 
-
     apiRequest("/profile", {
       params: { ...params, limit: 1000 },
     }).then((res) => {
@@ -45,7 +44,6 @@ const TagSelect = () => {
     const searchResult = developers;
     dispatch(profiles(searchResult));
     setSearchLoading(false);
-
   };
 
   return (

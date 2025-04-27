@@ -174,7 +174,7 @@ export const ProjectTracker = () => {
         startTask: startWrapperIndexTest.current.task,
         finishTask: task,
         finishIndex: finishTask,
-      })
+      }),
     );
   }
 
@@ -212,7 +212,7 @@ export const ProjectTracker = () => {
         moveProjectTask({
           startWrapperIndex: startWrapperIndexTest.current,
           columnId,
-        })
+        }),
       );
     }
   }
@@ -389,7 +389,7 @@ export const ProjectTracker = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("addPerson") ||
-            div.classList.contains("persons__list"))
+            div.classList.contains("persons__list")),
       )
     ) {
       setPersonListOpen(false);
@@ -401,7 +401,7 @@ export const ProjectTracker = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("tasks__head__executor") ||
-            div.classList.contains("tasks__head__executorDropdown"))
+            div.classList.contains("tasks__head__executorDropdown")),
       )
     ) {
       setSelectedExecutorOpen(false);
@@ -413,7 +413,7 @@ export const ProjectTracker = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("tasks__head__tags") ||
-            div.classList.contains("tags__list"))
+            div.classList.contains("tags__list")),
       )
     ) {
       setTags({
@@ -434,7 +434,7 @@ export const ProjectTracker = () => {
         (div) =>
           div.classList &&
           (div.classList.contains("board__head__more") ||
-            div.classList.contains("column__select"))
+            div.classList.contains("column__select")),
       )
     ) {
       setOpenColumnSelect((prevState) => {
@@ -519,10 +519,7 @@ export const ProjectTracker = () => {
             <div className="tracker__tabs__content__tasks tasks active__content">
               <div className="tasks__head">
                 <div className="tasks__head__wrapper">
-
-
                   <h5>Проект : {projectBoard.title}</h5>
-
 
                   {/* Добавить колонку */}
                   <div className="tasks__head__add">
@@ -537,7 +534,6 @@ export const ProjectTracker = () => {
                     </BaseButton>
                     <p>Добавить колонку</p>
                   </div>
-
 
                   {/* Добавить участников */}
                   <div
@@ -594,7 +590,7 @@ export const ProjectTracker = () => {
                           <span>{projectBoard?.executors?.length}</span>
                           {caseOfNum(
                             projectBoard?.executors?.length,
-                            "persons"
+                            "persons",
                           )}
                         </div>
                         <div className="persons__list__info">
@@ -616,8 +612,8 @@ export const ProjectTracker = () => {
                                     src={
                                       executor?.userCard?.avatar
                                         ? urlForLocal(
-                                          executor?.userCard?.avatar
-                                        )
+                                            executor?.userCard?.avatar,
+                                          )
                                         : avatarMok
                                     }
                                     alt="avatar"
@@ -872,7 +868,6 @@ export const ProjectTracker = () => {
                 </div>
               </div>
 
-
               {Boolean(modalActiveTicket) && (
                 <ModalTicket
                   active={modalActiveTicket}
@@ -881,9 +876,7 @@ export const ProjectTracker = () => {
                   projectId={projectBoard?.id}
                   // projectName={projectBoard.name}
                   projectName={projectBoard?.title}
-
                   projectUsers={projectBoard?.executors}
-
                   projectOwnerId={projectBoard?.creatorId}
                   // projectMarks={projectBoard?.mark}
                   projectMarks={[]}
@@ -901,13 +894,13 @@ export const ProjectTracker = () => {
                         onDragOver={(e) => dragOverHandler(e)}
                         onDragEnter={() => dragEnterHandler(column.id)}
                         onDrop={(e) => dragDropHandler(e, column.id)}
-                        className={`tasks__board ${wrapperHover[column.id] ? "tasks__board__hover" : ""
-                          }`}
+                        className={`tasks__board ${
+                          wrapperHover[column.id] ? "tasks__board__hover" : ""
+                        }`}
                       >
                         <div className="board__head">
                           <span>{column.title}</span>
                           <div className="board__head__more">
-
                             {/* плюсик для открытия модального окна для создания новой задачи */}
                             <span
                               className="add"
@@ -916,13 +909,12 @@ export const ProjectTracker = () => {
                                   column.id,
                                   projectBoard?.columns && column.tasks.length
                                     ? column.tasks[0].execution_priority - 1
-                                    : 1
+                                    : 1,
                                 );
                               }}
                             >
                               +
                             </span>
-
 
                             {/* троеточие для дополнительных действий с колонками, изменить, удалить */}
                             <span
@@ -983,8 +975,9 @@ export const ProjectTracker = () => {
                               return (
                                 <div
                                   key={task.id}
-                                  className={`tasks__board__item ${taskHover[task.id] ? "task__hover" : ""
-                                    }`}
+                                  className={`tasks__board__item ${
+                                    taskHover[task.id] ? "task__hover" : ""
+                                  }`}
                                   draggable={true}
                                   onDragStart={(e) =>
                                     dragStartHandler(e, task, column.id)
@@ -1004,7 +997,7 @@ export const ProjectTracker = () => {
                                     onClick={() => {
                                       if (window.innerWidth < 985) {
                                         window.location.replace(
-                                          `/tracker/task/${task.id}`
+                                          `/tracker/task/${task.id}`,
                                         );
                                       }
                                     }}
@@ -1034,9 +1027,9 @@ export const ProjectTracker = () => {
                                         src={
                                           task.executor?.userCard[0]?.avatar
                                             ? urlForLocal(
-                                              task.executor?.userCard[0]
-                                                .avatar
-                                            )
+                                                task.executor?.userCard[0]
+                                                  .avatar,
+                                              )
                                             : avatarMok
                                         }
                                         alt="avatar"
@@ -1064,11 +1057,14 @@ export const ProjectTracker = () => {
                                   )}
 
                                   {/* Приоритет */}
-                                  {typeof task.execution_priority === "number" && (
+                                  {typeof task.execution_priority ===
+                                    "number" && (
                                     <div className="tasks__board__item__priority">
                                       <p>Приоритет:</p>
                                       <span
-                                        className={priorityClass[task.execution_priority]}
+                                        className={
+                                          priorityClass[task.execution_priority]
+                                        }
                                       >
                                         {priority[task.execution_priority]}
                                       </span>
@@ -1096,7 +1092,7 @@ export const ProjectTracker = () => {
                                         {task.comments.length}{" "}
                                         {caseOfNum(
                                           task.comment_count,
-                                          "comments"
+                                          "comments",
                                         )}
                                       </span>
                                     </div>
@@ -1113,7 +1109,7 @@ export const ProjectTracker = () => {
 
                                   <TrackerSelectColumn
                                     columns={projectBoard.columns.filter(
-                                      (item) => item.id !== column.id
+                                      (item) => item.id !== column.id,
                                     )}
                                     currentColumn={column}
                                     task={task}

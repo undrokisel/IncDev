@@ -5,8 +5,6 @@ import { getCorrectDate } from "@components/Calendar/calendarHelper";
 import "./archiveTasksItem.scss";
 
 const ArchiveTasksItem = ({ task, index }) => {
-
-  
   return (
     <tr key={index}>
       <td className="archive__completeTask__description">

@@ -76,7 +76,7 @@ const initialState = {
   userInfo: null,
 };
 export const setUserInfo = createAsyncThunk("userInfo", (id) =>
-  apiRequest(`/profile/get-main-data?user_id=${id}`)
+  apiRequest(`/profile/get-main-data?user_id=${id}`),
 );
 
 export const fetchUserAnswersMany = createAsyncThunk(
@@ -85,7 +85,7 @@ export const fetchUserAnswersMany = createAsyncThunk(
     apiRequest("/user-response/set-responses", {
       method: "POST",
       data: { userResponses: checkedValues },
-    })
+    }),
 );
 
 export const fetchUserAnswerOne = createAsyncThunk(
@@ -94,17 +94,17 @@ export const fetchUserAnswerOne = createAsyncThunk(
     apiRequest("/user-response/set-response", {
       method: "POST",
       data: checkedValues[0],
-    })
+    }),
 );
 
 export const fetchGetAnswers = createAsyncThunk("answers", (question_id) =>
-  apiRequest(`/answer/get-answers?question_id=${question_id}`)
+  apiRequest(`/answer/get-answers?question_id=${question_id}`),
 );
 
 export const fetchResultTest = createAsyncThunk("result", (uuid) =>
   apiRequest(
-    `/user-questionnaire/questionnaire-completed?user_questionnaire_uuid=${uuid}`
-  )
+    `/user-questionnaire/questionnaire-completed?user_questionnaire_uuid=${uuid}`,
+  ),
 );
 
 export const quizSlice = createSlice({

@@ -14,7 +14,7 @@ const initialState = {
 };
 
 export const setProjectBoardFetch = createAsyncThunk("userInfo", (id) =>
-  apiRequest(`/project/get-project?project_id=${id}&expand=columns,mark`)
+  apiRequest(`/project/get-project?project_id=${id}&expand=columns,mark`),
 );
 
 export const projectsTrackerSlice = createSlice({
@@ -39,12 +39,12 @@ export const projectsTrackerSlice = createSlice({
     },
     deletePersonOnProject: (state, action) => {
       state.projectBoard.projectUsers = state.projectBoard.projectUsers.filter(
-        (person) => person.user_id !== action.payload
+        (person) => person.user_id !== action.payload,
       );
     },
     deleteTagProject: (state, action) => {
       state.projectBoard.mark = state.projectBoard.mark.filter(
-        (tag) => tag.id !== action.payload
+        (tag) => tag.id !== action.payload,
       );
     },
     addPersonToProject: (state, action) => {
@@ -74,7 +74,7 @@ export const projectsTrackerSlice = createSlice({
         }
         if (column.id === action.payload.startWrapperIndex.index) {
           state.projectBoard.columns[index].tasks = column.tasks.filter(
-            (task) => task.id !== action.payload.startWrapperIndex.task.id
+            (task) => task.id !== action.payload.startWrapperIndex.task.id,
           );
         }
       });
@@ -83,7 +83,7 @@ export const projectsTrackerSlice = createSlice({
       state.projectBoard.columns.forEach((column, index) => {
         if (column.id === action.payload.startTask.column_id) {
           state.projectBoard.columns[index].tasks = column.tasks.filter(
-            (task) => task.id !== action.payload.startTask.id
+            (task) => task.id !== action.payload.startTask.id,
           );
         }
         if (column.id === action.payload.finishTask.column_id) {
@@ -119,21 +119,21 @@ export const projectsTrackerSlice = createSlice({
     filterCreatedByMe: (state, action) => {
       state.projectBoard.columns.forEach((column) => {
         column.tasks = column.tasks.filter(
-          (task) => task.user_id === action.payload
+          (task) => task.user_id === action.payload,
         );
       });
     },
     filteredParticipateTasks: (state, action) => {
       state.projectBoard.columns.forEach((column) => {
         column.tasks = column.tasks.filter((task) =>
-          task.taskUsers.some((person) => person.user_id === action.payload)
+          task.taskUsers.some((person) => person.user_id === action.payload),
         );
       });
     },
     filteredExecutorTasks: (state, action) => {
       state.projectBoard.columns.forEach((column) => {
         column.tasks = column.tasks.filter(
-          (task) => task.executor_id === action.payload
+          (task) => task.executor_id === action.payload,
         );
       });
     },
@@ -166,8 +166,6 @@ export const projectsTrackerSlice = createSlice({
   },
   extraReducers: {
     [setProjectBoardFetch.fulfilled]: (state, action) => {
-
-
       state.projectBoard = action.payload.project;
       state.boardLoader = false;
     },

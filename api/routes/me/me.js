@@ -29,8 +29,8 @@ router.get(`/`, authMiddleware, async (req, res) => {
       id: Number(req.user.id),
     },
     include: {
-      userCard: true
-    }
+      userCard: true,
+    },
   });
 
   // const userCard = await prisma.userCard.findFirst({

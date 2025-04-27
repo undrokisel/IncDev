@@ -25,11 +25,11 @@ export const Profile = () => {
   const profileInfo = useSelector(getProfileInfo);
 
   useEffect(() => {
-    console.log(profileInfo)
-  }, [])
+    console.log(profileInfo);
+  }, []);
 
   const [user] = useState(
-    localStorage.getItem("role_status") === "18" ? "partner" : "developer"
+    localStorage.getItem("role_status") === "18" ? "partner" : "developer",
   );
   const [profileItemsInfo] = useState({
     developer: [
@@ -106,18 +106,16 @@ export const Profile = () => {
       <div className="container">
         <ProfileBreadcrumbs links={[{ name: "Главная", link: "/profile" }]} />
         <h2 className="profile__title">
-
           {/* если статус-роль разработчика */}
           {user === "developer" ? (
             <span>
               <p>Добрый день,&nbsp;</p>
               {profileInfo?.fio ? profileInfo?.fio : profileInfo?.username}
             </span>
-            // а иначе- для компании
           ) : (
+            // а иначе- для компании
             "Ваша компания"
           )}
-
         </h2>
         <div className="summary__info">
           <div className="summary__person">
@@ -138,7 +136,6 @@ export const Profile = () => {
                 "Ваша компания"
               )}
             </p>
-            
           </div>
         </div>
         <div className="profile__items">

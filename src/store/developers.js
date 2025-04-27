@@ -14,8 +14,6 @@ export const developers = [
       { skill: { name: "Next JS" }, id: 2 },
     ],
     // vc_text: {text: "<p>vc_text</p><p>vc_text2</p>"},
-    vc_text: 'Разработчик интерфейсов приложений'
+    vc_text: "Разработчик интерфейсов приложений",
   },
 ];
-
-

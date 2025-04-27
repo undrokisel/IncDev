@@ -40,11 +40,11 @@ export const PartnerAddRequest = () => {
   const [editRequest, setEditRequest] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedSpecialization, setSelectedSpecialization] = useState(
-    "Выберите специализацию"
+    "Выберите специализацию",
   );
   const [selectedLevel, setSelectedLevel] = useState("Выберите уровень");
   const [selectedCount, setSelectedCount] = useState(
-    "Выберите кол-во сотрудников"
+    "Выберите кол-во сотрудников",
   );
   const [inputs, setInputs] = useState({ title: "", description: "" });
 
@@ -57,7 +57,7 @@ export const PartnerAddRequest = () => {
 
   useEffect(() => {
     apiRequest(`/profile/positions-list`).then((el) =>
-      setSpecializationList(el)
+      setSpecializationList(el),
     );
     apiRequest(`/profile/level-list`).then((el) => setLevelList(el));
     apiRequest(`/skills/get-skills-list`).then((el) => {
@@ -247,7 +247,7 @@ export const PartnerAddRequest = () => {
                               setSelectedSkills(
                                 selectedSkills.filter((skill, indexSkill) => {
                                   return indexSkill !== index;
-                                })
+                                }),
                               );
                             }}
                           />
@@ -263,7 +263,7 @@ export const PartnerAddRequest = () => {
                           return skill.name
                             .toLowerCase()
                             .includes(e.target.value.toLowerCase());
-                        })
+                        }),
                       );
                     }}
                   />
@@ -282,12 +282,12 @@ export const PartnerAddRequest = () => {
                             setFilteredSkills(
                               filteredSkills.filter((skill, skillIndex) => {
                                 return skillIndex !== index;
-                              })
+                              }),
                             );
                             setSkills(
                               skills.filter((initSkill) => {
                                 return initSkill.id !== skill.id;
-                              })
+                              }),
                             );
                             setOpenSkillsSelect(false);
                           }}

@@ -40,7 +40,7 @@ export const TaskQuiz = () => {
       (response) => {
         dispatch(fetchGetAnswers(response[0].id));
         setStripValue(((+index + 1) * 100) / response.length);
-      }
+      },
     );
   }, [dispatch]);
 

@@ -41,8 +41,8 @@ export const Summary = () => {
 
   useEffect(() => {
     setSummery(profileInfo.vc_text);
-    console.log("summery")
-    console.log(profileInfo)
+    console.log("summery");
+    console.log(profileInfo);
   }, [profileInfo]);
 
   function editSummery() {

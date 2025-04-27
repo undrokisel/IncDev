@@ -67,7 +67,6 @@ router.get(`/get-project`, async (req, res) => {
       // },
     });
 
-
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -82,11 +81,11 @@ router.get(`/get-project`, async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     const { name, description, user_id, status } = req.body;
-    
+
     if (!name || !user_id) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    
+
     // Создаем новый проект
     const newProject = await prisma.project.create({
       data: {
@@ -97,14 +96,14 @@ router.post("/create", async (req, res) => {
         updated_at: new Date(),
         creatorId: parseInt(user_id),
         executors: {
-          connect: [{ id: parseInt(user_id) }]
-        }
+          connect: [{ id: parseInt(user_id) }],
+        },
       },
       include: {
-        executors: true
-      }
+        executors: true,
+      },
     });
-    
+
     res.status(201).json(newProject);
   } catch (error) {
     console.error("Ошибка при создании проекта:", error);
@@ -116,24 +115,25 @@ router.post("/create", async (req, res) => {
 router.put("/update", async (req, res) => {
   try {
     const { project_id, title, description, status, dead_line } = req.body;
-    
+
     if (!project_id) {
       return res.status(400).json({ error: "Missing project_id" });
     }
-    
+
     const updateData = {};
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
     if (status !== undefined) updateData.status = parseInt(status);
-    if (dead_line !== undefined) updateData.dead_line = dead_line ? new Date(dead_line) : null;
-    
+    if (dead_line !== undefined)
+      updateData.dead_line = dead_line ? new Date(dead_line) : null;
+
     updateData.updated_at = new Date();
-    
+
     const updatedProject = await prisma.project.update({
       where: { id: parseInt(project_id) },
-      data: updateData
+      data: updateData,
     });
-    
+
     res.json(updatedProject);
   } catch (error) {
     console.error("Ошибка при обновлении проекта:", error);
@@ -145,52 +145,52 @@ router.put("/update", async (req, res) => {
 router.post("/add-user", async (req, res) => {
   try {
     const { project_id, user_id } = req.body;
-    
+
     if (!project_id || !user_id) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    
+
     // Проверяем, существует ли проект
     const project = await prisma.project.findUnique({
-      where: { id: parseInt(project_id) }
+      where: { id: parseInt(project_id) },
     });
-    
+
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
-    
+
     // Проверяем, существует ли пользователь
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(user_id) }
+      where: { id: parseInt(user_id) },
     });
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    
+
     // Добавляем пользователя в проект
     const updatedProject = await prisma.project.update({
       where: { id: parseInt(project_id) },
       data: {
         executors: {
-          connect: { id: parseInt(user_id) }
-        }
+          connect: { id: parseInt(user_id) },
+        },
       },
       include: {
         executors: {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
-      }
+            userCard: true,
+          },
+        },
+      },
     });
-    
+
     res.json(updatedProject);
   } catch (error) {
     // Если пользователь уже в проекте
-    if (error.code === 'P2002') {
+    if (error.code === "P2002") {
       return res.status(400).json({ error: "User is already in the project" });
     }
     console.error("Ошибка при добавлении пользователя в проект:", error);
@@ -202,11 +202,11 @@ router.post("/add-user", async (req, res) => {
 router.get("/my-employee", async (req, res) => {
   try {
     const userId = parseInt(req.query.user_id);
-    
+
     if (!userId) {
       return res.status(400).json({ error: "Missing user_id" });
     }
-    
+
     const userWithEmployees = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -214,16 +214,16 @@ router.get("/my-employee", async (req, res) => {
           select: {
             id: true,
             username: true,
-            userCard: true
-          }
-        }
-      }
+            userCard: true,
+          },
+        },
+      },
     });
-    
+
     if (!userWithEmployees) {
       return res.status(404).json({ error: "User not found" });
     }
-    
+
     res.json(userWithEmployees.employees);
   } catch (error) {
     console.error("Ошибка при получении сотрудников:", error);

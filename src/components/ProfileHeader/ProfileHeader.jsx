@@ -17,7 +17,7 @@ export const ProfileHeader = () => {
   const profileInfo = useSelector(getProfileInfo);
   const userRole = useSelector(getRole);
   const [user] = useState(
-    localStorage.getItem("role_status") === "18" ? "partner" : "developer"
+    localStorage.getItem("role_status") === "18" ? "partner" : "developer",
   );
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -35,8 +35,8 @@ export const ProfileHeader = () => {
     apiRequest(`/user/me`).then((profileInfo) => {
       dispatch(
         setProfileInfo(
-          profileInfo.userCard ? profileInfo.userCard[0] : profileInfo
-        )
+          profileInfo.userCard ? profileInfo.userCard[0] : profileInfo,
+        ),
       );
     });
   }, [dispatch]);

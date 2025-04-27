@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const { PrismaClient } = require("@prisma/client");
 
 // мидлвары
@@ -35,9 +35,7 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-
 // routes
-
 
 // faqs
 const faqsRoutes = require("./routes/faqs/faqs.js");
@@ -58,7 +56,6 @@ app.use("/api/user/login", login);
 // /user/me
 const profileInfo = require("./routes/me/me.js");
 app.use("/api/user/me", profileInfo);
-
 
 // /projects-list
 const projectlist = require("./routes/projects/projects.js");
@@ -91,7 +88,6 @@ app.use("/api/comment", comments);
 const timers = require("./routes/timers/timers.js");
 app.use("/api/timer", timers);
 
-
 // /profiles
 const profiles = require("./routes/profiles/profiles.js");
 app.use("/api/profile", profiles);
@@ -101,8 +97,6 @@ app.get("/", async (req, res) => {
   const users = await prisma.user.findMany();
   res.json(users);
 });
-
-
 
 app.listen(port, () => {
   // eslint-disable-next-line

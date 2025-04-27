@@ -89,7 +89,7 @@ const CalendarComponent = ({ onSelect }) => {
                 <img className={"calendar__icon"} src={calendarIcon} alt="" />
                 {currentMonthAndDay(day)}
               </button>
-            ))
+            )),
           )}
         </div>
       </div>

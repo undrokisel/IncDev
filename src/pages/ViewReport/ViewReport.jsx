@@ -42,8 +42,8 @@ export const ViewReport = () => {
     setTomorrowTask([]);
     apiRequest(
       `reports/find-by-date?user_card_id=${localStorage.getItem(
-        "cardId"
-      )}&date=${day}`
+        "cardId",
+      )}&date=${day}`,
     ).then((res) => {
       let spendTime = 0;
       for (const item of res) {

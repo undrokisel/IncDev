@@ -21,8 +21,6 @@ export const TrackerTaskComment = ({
   addSubComment,
   subCommentDelete,
 }) => {
-
-
   const [commentsEditOpen, setCommentsEditOpen] = useState(false);
   const [commentsEditText, setCommentsEditText] = useState(comment.text);
   const [subCommentsCreateOpen, setSubCommentsCreateOpen] = useState(false);
@@ -36,7 +34,7 @@ export const TrackerTaskComment = ({
         comment_id: comment.id,
         text: commentsEditText,
       },
-    }).then(() => { });
+    }).then(() => {});
   }
 
   function deleteComment() {
@@ -74,7 +72,6 @@ export const TrackerTaskComment = ({
       addSubComment(comment.id, newSubComment);
     });
 
-
     let newSubComment = res;
     newSubComment.created_at = new Date();
     setSubCommentsCreateText("");
@@ -93,8 +90,6 @@ export const TrackerTaskComment = ({
       ].join(" ")}
     >
       <div className="comments__list__item__info">
-
-
         {/* Создатель комментария */}
         <div className="comments__list__item__fio">
           <img
@@ -108,12 +103,9 @@ export const TrackerTaskComment = ({
           <p>{comment?.user?.userCard[0].fio}</p>
         </div>
 
-
         <div className="comments__list__item__date">
-
           {/* Комментарий создан, дата */}
           <span>{getCorrectDate(comment.created_at)}</span>
-
 
           {/* Редактирование своего комментария по клику */}
           {comment.userId === Number(localStorage.getItem("id")) && (
@@ -134,10 +126,7 @@ export const TrackerTaskComment = ({
               <img src={del} alt="delete" onClick={() => deleteComment()} />
             </>
           )}
-
-
         </div>
-
       </div>
       {commentsEditOpen ? (
         <CKEditor

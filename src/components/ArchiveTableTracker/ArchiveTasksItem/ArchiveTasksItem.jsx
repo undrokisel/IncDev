@@ -6,7 +6,6 @@ import "./archiveTasksItem.scss";
 
 const ArchiveTasksItem = ({ task, index }) => {
 
-  console.log(task);
   
   return (
     <tr key={index}>

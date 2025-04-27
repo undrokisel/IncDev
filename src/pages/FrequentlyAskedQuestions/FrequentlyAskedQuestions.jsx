@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import AuthHeader from "@components/Common/AuthHeader/AuthHeader";
 import { Footer } from "@components/Common/Footer/Footer";
@@ -9,61 +9,20 @@ import SideBar from "@components/SideBar/SideBar";
 import arrow from "assets/images/faq/arrow.svg";
 
 import "./FrequentlyAskedQuestions.scss";
-
-
-const rubrics = [
-  {
-    title: "Общие вопросы ",
-   
-    questions: [
-      {
-        id: 1,
-        title: "Это фриланс-платформа?",
-      },
-      {
-        id: 2,
-        title:
-          "Чем вы отличаетесь от традиционного процесса выбора исполнителя?",
-      },
-      {
-        id: 3,
-        title: "Как начать работу?",
-      },
-    ],
-  },
-  
-  {
-    title: "Поиск специалиста",
-    questions: [
-      {
-        id: 4,
-        title: "Как найти специлиста в компанию?",
-      },
-    ],
-  },
-  {
-    title: "Бронирование специалиста",
-    questions: [
-      {
-        id: 6,
-        title: "Как организован процесс привлечения специалиста на проект?",
-      },
-    ],
-  },
-  {
-    title: "Работа с выбранным специалистом",
-    questions: [
-      {
-        id: 7,
-        title:
-          "Я недоволен работой привлеченного специалиста, что делать?",
-      },
-    ],
-  },
-];
+import { apiRequest } from "@api/request";
 
 export const FrequentlyAskedQuestions = () => {
-  
+  const [faqs, setFaqs] = useState([]);
+  const [rubrics, setRubrics] = useState([]);
+
+  useLayoutEffect(() => {
+    Promise.all([apiRequest("/rubrics"), apiRequest("/faqs")])
+      .then(([rubricsResponse, faqsResponse]) => {
+        setRubrics(rubricsResponse);
+        setFaqs(faqsResponse);
+      })
+      .catch((error) => console.log("Ошибка при выполнении запросов: ", error));
+  }, []);
 
   return (
     <div className="frequently-asked-questions">
@@ -90,8 +49,12 @@ export const FrequentlyAskedQuestions = () => {
           </div>
         </div>
         <div className="frequently-asked-questions__items">
-          {rubrics.map((rubric, index) => (
-            <FrequentlyAskedQuestionsItem rubric={rubric} key={index} />
+          {rubrics?.map((rubric, index) => (
+            <FrequentlyAskedQuestionsItem
+              rubric={rubric}
+              faqs={faqs.filter((faq) => faq.rubricId === rubric.id)}
+              key={index}
+            />
           ))}
         </div>
       </div>

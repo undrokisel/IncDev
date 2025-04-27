@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { getProfileInfo } from "@redux/outstaffingSlice";
@@ -19,12 +19,14 @@ import avatarMok from "assets/images/avatarMok.png";
 import reportsIcon from "assets/images/reports.png";
 
 import "./profile.scss";
-import { profileInfo } from "@store/profile";
+// import { profileInfo } from "@store/profile";
 
 export const Profile = () => {
-  // const profileInfo = useSelector(getProfileInfo);
+  const profileInfo = useSelector(getProfileInfo);
 
-  
+  useEffect(() => {
+    console.log(profileInfo)
+  }, [])
 
   const [user] = useState(
     localStorage.getItem("role_status") === "18" ? "partner" : "developer"
@@ -104,14 +106,18 @@ export const Profile = () => {
       <div className="container">
         <ProfileBreadcrumbs links={[{ name: "Главная", link: "/profile" }]} />
         <h2 className="profile__title">
+
+          {/* если статус-роль разработчика */}
           {user === "developer" ? (
             <span>
               <p>Добрый день,&nbsp;</p>
               {profileInfo?.fio ? profileInfo?.fio : profileInfo?.username}
             </span>
+            // а иначе- для компании
           ) : (
             "Ваша компания"
           )}
+
         </h2>
         <div className="summary__info">
           <div className="summary__person">
@@ -132,6 +138,7 @@ export const Profile = () => {
                 "Ваша компания"
               )}
             </p>
+            
           </div>
         </div>
         <div className="profile__items">

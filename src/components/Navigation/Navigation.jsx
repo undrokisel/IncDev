@@ -79,7 +79,7 @@ export const Navigation = () => {
     apiRequest(`/user/me`).then((profileInfo) =>
       dispatch(
         setProfileInfo(
-          profileInfo.userCard ? profileInfo.userCard : profileInfo
+          profileInfo.userCard ? profileInfo.userCard[0] : profileInfo
         )
       )
     );

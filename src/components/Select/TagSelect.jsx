@@ -10,7 +10,7 @@ import {
   setPositionId,
 } from "@redux/outstaffingSlice";
 
-// import { apiRequest } from "@api/request";
+import { apiRequest } from "@api/request";
 
 import { Loader } from "@components/Common/Loader/Loader";
 
@@ -34,15 +34,13 @@ const TagSelect = () => {
 
     const params = filterItemsId ? { skill: filterItemsId } : "";
 
-    // console.log("params")
-    // console.log(params)
 
-    // apiRequest("/profile", {
-    //   params: { ...params, limit: 1000 },
-    // }).then((res) => {
-    //   dispatch(profiles(res));
-    //   setSearchLoading(false);
-    // });
+    apiRequest("/profile", {
+      params: { ...params, limit: 1000 },
+    }).then((res) => {
+      dispatch(profiles(res));
+      setSearchLoading(false);
+    });
 
     const searchResult = developers;
     dispatch(profiles(searchResult));

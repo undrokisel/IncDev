@@ -21,13 +21,13 @@ import gitImgItem from "assets/icons/gitItemImg.svg";
 import avatarMok from "assets/images/avatarMok.png";
 
 import "./summary.scss";
-import { gitInfo, profileInfo } from "@store/profile";
+import { gitInfo } from "@store/profile";
 
 export const Summary = () => {
   if (localStorage.getItem("role_status") === "18") {
     return <Navigate to="/profile" replace />;
   }
-  // const profileInfo = useSelector(getProfileInfo);
+  const profileInfo = useSelector(getProfileInfo);
   const [openGit, setOpenGit] = useState(false);
   // const [gitInfo, setGitInfo] = useState([]);
   const [editSummeryOpen, setEditSummeryOpen] = useState(false);
@@ -41,6 +41,8 @@ export const Summary = () => {
 
   useEffect(() => {
     setSummery(profileInfo.vc_text);
+    console.log("summery")
+    console.log(profileInfo)
   }, [profileInfo]);
 
   function editSummery() {

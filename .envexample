@@ -1,2 +1,12 @@
-REACT_APP_API_URL = https://DevInc.info/api
-REACT_APP_BASE_URL = https://DevInc.info/api
+REACT_APP_API_URL = https://inc-dev-kappa.vercel.app/api
+REACT_APP_BASE_URL = https://inc-dev-kappa.vercel.app/api
+
+JWT_SECRET_KEY=
+
+DATABASE_URL=
+
+DATABASE_URL_UNPOOLED=
+
+
+
+

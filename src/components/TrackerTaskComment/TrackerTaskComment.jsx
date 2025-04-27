@@ -21,6 +21,8 @@ export const TrackerTaskComment = ({
   addSubComment,
   subCommentDelete,
 }) => {
+
+
   const [commentsEditOpen, setCommentsEditOpen] = useState(false);
   const [commentsEditText, setCommentsEditText] = useState(comment.text);
   const [subCommentsCreateOpen, setSubCommentsCreateOpen] = useState(false);
@@ -28,61 +30,55 @@ export const TrackerTaskComment = ({
 
   function editComment() {
     if (commentsEditText === comment.text) return;
-    // apiRequest("/comment/update", {
-    //   method: "PUT",
-    //   data: {
-    //     comment_id: comment.id,
-    //     text: commentsEditText,
-    //   },
-    // }).then(() => {});
+    apiRequest("/comment/update", {
+      method: "PUT",
+      data: {
+        comment_id: comment.id,
+        text: commentsEditText,
+      },
+    }).then(() => { });
   }
 
   function deleteComment() {
-    // apiRequest("/comment/update", {
-    //   method: "PUT",
-    //   data: {
-    //     comment_id: comment.id,
-    //     status: 0,
-    //   },
-    // }).then(() => {
-    //   if (comment.parent_id) {
-    //     subCommentDelete(comment);
-    //   } else {
-    //     commentDelete(comment);
-    //   }
-    // });
-
-    if (comment.parent_id) {
-      subCommentDelete(comment);
-    } else {
-      commentDelete(comment);
-    }
+    apiRequest("/comment/update", {
+      method: "PUT",
+      data: {
+        comment_id: comment.id,
+        status: 0,
+      },
+    }).then(() => {
+      if (comment.parent_id) {
+        subCommentDelete(comment);
+      } else {
+        commentDelete(comment);
+      }
+    });
   }
 
   function createSubComment() {
     setSubCommentsCreateOpen(false);
     if (!subCommentsCreateText) return;
 
-    // apiRequest("/comment/create", {
-    //   method: "POST",
-    //   data: {
-    //     text: subCommentsCreateText,
-    //     entity_type: 2,
-    //     entity_id: taskId,
-    //     parent_id: comment.id,
-    //   },
-    // }).then((res) => {
-    //   let newSubComment = res;
-    //   newSubComment.created_at = new Date();
-    //   setSubCommentsCreateText("");
-    //   addSubComment(comment.id, newSubComment);
-    // });
-
-
-    let newSubComment = res;
+    apiRequest("/comment/create", {
+      method: "POST",
+      data: {
+        text: subCommentsCreateText,
+        entity_type: 2,
+        entity_id: taskId,
+        parent_id: comment.id,
+      },
+    }).then((res) => {
+      let newSubComment = res;
       newSubComment.created_at = new Date();
       setSubCommentsCreateText("");
       addSubComment(comment.id, newSubComment);
+    });
+
+
+    let newSubComment = res;
+    newSubComment.created_at = new Date();
+    setSubCommentsCreateText("");
+    addSubComment(comment.id, newSubComment);
   }
 
   return (
@@ -97,6 +93,9 @@ export const TrackerTaskComment = ({
       ].join(" ")}
     >
       <div className="comments__list__item__info">
+
+
+        {/* Создатель комментария */}
         <div className="comments__list__item__fio">
           <img
             src={
@@ -106,11 +105,18 @@ export const TrackerTaskComment = ({
             }
             alt="avatar"
           />
-          <p>{comment.user.fio}</p>
+          <p>{comment?.user?.userCard[0].fio}</p>
         </div>
+
+
         <div className="comments__list__item__date">
+
+          {/* Комментарий создан, дата */}
           <span>{getCorrectDate(comment.created_at)}</span>
-          {comment.user_id === Number(localStorage.getItem("id")) && (
+
+
+          {/* Редактирование своего комментария по клику */}
+          {comment.userId === Number(localStorage.getItem("id")) && (
             <>
               <div className={commentsEditOpen ? "edit edit__open" : "edit"}>
                 <img
@@ -124,10 +130,14 @@ export const TrackerTaskComment = ({
                   }}
                 />
               </div>
+
               <img src={del} alt="delete" onClick={() => deleteComment()} />
             </>
           )}
+
+
         </div>
+
       </div>
       {commentsEditOpen ? (
         <CKEditor
@@ -158,6 +168,7 @@ export const TrackerTaskComment = ({
           className="comments__list__item__text"
         />
       )}
+
       {!comment.parent_id && !commentsEditOpen && (
         <>
           {subCommentsCreateOpen ? (
@@ -188,6 +199,8 @@ export const TrackerTaskComment = ({
           )}
         </>
       )}
+
+      {/* вложенные комментарии */}
       {Boolean(comment.subComments?.length) &&
         comment.subComments.map((subComment) => {
           return (

@@ -56,7 +56,7 @@ import archive from "assets/images/archiveIcon.png";
 import avatarMok from "assets/images/avatarMok.png";
 
 import { getCorrectDate } from "../../components/Calendar/calendarHelper";
-import { projectBoards } from "@store/profile";
+// import { projectBoards } from "@store/profile";
 
 export const ProjectTracker = () => {
   const dispatch = useDispatch();
@@ -87,11 +87,9 @@ export const ProjectTracker = () => {
   const [selectedExecutor, setSelectedExecutor] = useState(null);
   const [selectExecutorOpen, setSelectedExecutorOpen] = useState(false);
   const startWrapperIndexTest = useRef({});
-  // const projectBoard = useSelector(getProjectBoard);
+  const projectBoard = useSelector(getProjectBoard);
   const loader = useSelector(getBoarderLoader);
   const { showNotification } = useNotification();
-
-  const [projectBoard, setProjectBoard] = useState({});
 
   const priority = {
     2: "Высокий",
@@ -105,24 +103,20 @@ export const ProjectTracker = () => {
     0: "low",
   };
 
-  
-  
-  
   useEffect(() => {
     dispatch(activeLoader());
-    //   dispatch(setProjectBoardFetch(projectId.id));
-
-    setProjectBoard(projectBoards[+projectId.id - 1]);
-
+    dispatch(setProjectBoardFetch(projectId.id));
+    // setProjectBoard(projectBoards[+projectId.id - 1]);
     initListeners();
   }, []);
 
-  
-
   useEffect(() => {
     const tasksHover = {};
+
     const columnHover = {};
+
     let columnsTasksEmpty = true;
+
     if (Object.keys(projectBoard).length) {
       projectBoard.columns.forEach((column) => {
         if (column.tasks.length) columnsTasksEmpty = false;
@@ -131,7 +125,7 @@ export const ProjectTracker = () => {
           [column.id]: false,
         }));
         columnHover[column.id] = false;
-        column.tasks.forEach((task) => (tasksHover[task.id] = false));
+        column?.tasks?.forEach((task) => (tasksHover[task.id] = false));
       });
     }
     if (
@@ -239,49 +233,49 @@ export const ProjectTracker = () => {
   }
 
   function deleteColumn(column) {
-    // const priorityColumns = [];
-    // apiRequest("/project-column/update-column", {
-    //   method: "PUT",
-    //   data: {
-    //     column_id: column.id,
-    //     project_id: projectBoard.id,
-    //     status: 0,
-    //   },
-    // }).then(() => {
-    //   if (column.priority < projectBoard.columns.length) {
-    //     for (let i = column.priority; i < projectBoard.columns.length; i++) {
-    //       const currentColumn = {
-    //         column_id: projectBoard.columns[i].id,
-    //         priority: i,
-    //       };
-    //       priorityColumns.push(currentColumn);
-    //     }
-    //     apiRequest("/project-column/set-priority", {
-    //       method: "POST",
-    //       data: {
-    //         project_id: projectBoard.id,
-    //         data: JSON.stringify(priorityColumns),
-    //       },
-    //     }).then(() => {
-    //       dispatch(setProjectBoardFetch(projectBoard.id));
-    //     });
-    //   } else {
-    //     dispatch(setProjectBoardFetch(projectBoard.id));
-    //   }
-    //   showNotification({ show: true, text: "Колонка удалена", type: "error" });
-    // });
+    const priorityColumns = [];
+    apiRequest("/project-column/update-column", {
+      method: "PUT",
+      data: {
+        column_id: column.id,
+        project_id: projectBoard.id,
+        status: 0,
+      },
+    }).then(() => {
+      if (column.priority < projectBoard.columns.length) {
+        for (let i = column.priority; i < projectBoard.columns.length; i++) {
+          const currentColumn = {
+            column_id: projectBoard.columns[i].id,
+            priority: i,
+          };
+          priorityColumns.push(currentColumn);
+        }
+        apiRequest("/project-column/set-priority", {
+          method: "POST",
+          data: {
+            project_id: projectBoard.id,
+            data: JSON.stringify(priorityColumns),
+          },
+        }).then(() => {
+          dispatch(setProjectBoardFetch(projectBoard.id));
+        });
+      } else {
+        dispatch(setProjectBoardFetch(projectBoard.id));
+      }
+      showNotification({ show: true, text: "Колонка удалена", type: "error" });
+    });
   }
 
   function deletePerson(userId) {
-    // apiRequest("/project/del-user", {
-    //   method: "DELETE",
-    //   data: {
-    //     project_id: projectBoard.id,
-    //     user_id: userId,
-    //   },
-    // }).then(() => {
-    //   dispatch(deletePersonOnProject(userId));
-    // });
+    apiRequest("/project/del-user", {
+      method: "DELETE",
+      data: {
+        project_id: projectBoard.id,
+        user_id: userId,
+      },
+    }).then(() => {
+      dispatch(deletePersonOnProject(userId));
+    });
 
     dispatch(deletePersonOnProject(userId));
   }
@@ -461,6 +455,8 @@ export const ProjectTracker = () => {
     <div className="tracker">
       <ProfileHeader />
       <Navigation />
+
+      {/* breadcrumbs & title */}
       <div className="container">
         <div className="tracker__content">
           <ProfileBreadcrumbs
@@ -472,7 +468,9 @@ export const ProjectTracker = () => {
           <h2 className="tracker__title">Управление проектами с трекером</h2>
         </div>
       </div>
+
       <div className="tracker__tabs">
+        {/* tracker__tabs */}
         <div className="tracker__tabs__head">
           <Link
             to="/profile/tracker"
@@ -501,24 +499,32 @@ export const ProjectTracker = () => {
             <p>Архив</p>
           </Link>
         </div>
+
         <div className="tracker__tabs__content">
-          <TrackerModal
-            active={modalAdd}
-            setActive={setModalAdd}
-            selectedTab={selectedTab}
-            priorityTask={priorityTask}
-            projectUsers={projectBoard.projectUsers}
-            projectMarks={projectBoard.mark}
-          />
+          {projectBoard && (
+            <TrackerModal
+              active={modalAdd}
+              setActive={setModalAdd}
+              selectedTab={selectedTab}
+              priorityTask={priorityTask}
+              // todo
+              executors={projectBoard.executors}
+              // projectMarks={projectBoard.mark}
+              projectMarks={[]}
+            />
+          )}
+          {loader && <Loader style="pink" />}
 
-          {/* {loader && <Loader style="pink" />} */}
-
-          {loader && (
+          {!loader && (
             <div className="tracker__tabs__content__tasks tasks active__content">
               <div className="tasks__head">
                 <div className="tasks__head__wrapper">
-                  <h5>Проект : {projectBoard.name}</h5>
 
+
+                  <h5>Проект : {projectBoard.title}</h5>
+
+
+                  {/* Добавить колонку */}
                   <div className="tasks__head__add">
                     <BaseButton
                       onClick={() => {
@@ -529,38 +535,33 @@ export const ProjectTracker = () => {
                     >
                       +
                     </BaseButton>
-                    {/* <span
-                      onClick={() => {
-                        dispatch(modalToggle("createColumn"));
-                        setModalAdd(true);
-                      }}
-                    >
-                      +
-                    </span> */}
-                    <p>добавить колонку</p>
+                    <p>Добавить колонку</p>
                   </div>
+
+
+                  {/* Добавить участников */}
                   <div
                     className={
-                      projectBoard.projectUsers?.length
+                      projectBoard?.executors?.length
                         ? "tasks__head__persons"
-                        : "tasks__head__persons noProjectUsers"
+                        : "tasks__head__persons noexecutors"
                     }
                   >
-                    {Boolean(projectBoard.projectUsers?.length) && (
+                    {Boolean(projectBoard?.executors?.length) && (
                       <div
                         className={
-                          projectBoard.projectUsers?.length == 1
+                          projectBoard?.executors?.length == 1
                             ? "onePerson"
                             : "projectPersons"
                         }
                       >
-                        {projectBoard.projectUsers.slice(0, 3).map((person) => {
+                        {projectBoard?.executors.slice(0, 3).map((executor) => {
                           return (
                             <img
-                              key={person.user_id}
+                              key={executor?.userCard?.id}
                               src={
-                                person.user?.avatar
-                                  ? urlForLocal(person.user.avatar)
+                                executor?.userCard?.avatar
+                                  ? urlForLocal(executor?.userCard?.user.avatar)
                                   : avatarMok
                               }
                               alt="avatar"
@@ -569,7 +570,7 @@ export const ProjectTracker = () => {
                         })}
                       </div>
                     )}
-                    {projectBoard.projectUsers?.length > 3 && (
+                    {projectBoard?.executors?.length > 3 && (
                       <span className="countPersons">+1</span>
                     )}
                     <span
@@ -590,43 +591,51 @@ export const ProjectTracker = () => {
                           onClick={() => setPersonListOpen(false)}
                         />
                         <div className="persons__list__count">
-                          <span>{projectBoard.projectUsers?.length}</span>
+                          <span>{projectBoard?.executors?.length}</span>
                           {caseOfNum(
-                            projectBoard.projectUsers?.length,
+                            projectBoard?.executors?.length,
                             "persons"
                           )}
                         </div>
                         <div className="persons__list__info">
                           <span>В проекте - </span>
-                          <p>“{projectBoard.name}”</p>
+                          {/* <p>“{projectBoard.name}”</p> */}
+                          <p>“{projectBoard.title}”</p>
                         </div>
                         <div className="persons__list__items">
-                          {projectBoard.projectUsers?.map((person) => {
-                            return (
-                              <div
-                                className="persons__list__item"
-                                key={person.user_id}
-                              >
-                                <img
-                                  className="avatar"
-                                  src={
-                                    person.user?.avatar
-                                      ? urlForLocal(person.user.avatar)
-                                      : avatarMok
-                                  }
-                                  alt="avatar"
-                                />
-                                <span>{person.user.fio}</span>
-                                <img
-                                  className="delete"
-                                  src={close}
-                                  alt="delete"
-                                  onClick={() => deletePerson(person.user_id)}
-                                />
-                              </div>
-                            );
-                          })}
+                          {projectBoard &&
+                            projectBoard.length &&
+                            projectBoard?.executors?.map((executor) => {
+                              return (
+                                <div
+                                  className="persons__list__item"
+                                  key={executor?.userCard?.user_id}
+                                >
+                                  <img
+                                    className="avatar"
+                                    src={
+                                      executor?.userCard?.avatar
+                                        ? urlForLocal(
+                                          executor?.userCard?.avatar
+                                        )
+                                        : avatarMok
+                                    }
+                                    alt="avatar"
+                                  />
+                                  <span>{executor?.userCard?.fio}</span>
+                                  <img
+                                    className="delete"
+                                    src={close}
+                                    alt="delete"
+                                    onClick={() =>
+                                      deletePerson(executor?.userCard?.user_id)
+                                    }
+                                  />
+                                </div>
+                              );
+                            })}
                         </div>
+
                         <div
                           className="persons__list__add"
                           onClick={() => {
@@ -641,7 +650,8 @@ export const ProjectTracker = () => {
                       </div>
                     )}
                   </div>
-                  {/* <div
+                  {/* Участвую */}
+                  <div
                     className="tasks__head__checkBox"
                     onClick={filterParticipateTasks}
                   >
@@ -652,20 +662,21 @@ export const ProjectTracker = () => {
                       )}
                     </div>
                   </div>
+                  {/* Чекбокс Мои */}
                   <div className="tasks__head__checkBox" onClick={filterMyTask}>
                     <span>Мои</span>
                     <div className="tasks__head__checkBox__box">
                       {checkBoxMyTasks && <img src={accept} alt="accept" />}
                     </div>
-                  </div> */}
+                  </div>
                   {selectedExecutor ? (
                     <div className="tasks__head__executorSelected">
-                      <p>{selectedExecutor.user.fio}</p>
+                      <p>{selectedExecutor?.userCard?.fio}</p>
                       <img
                         className="avatar"
                         src={
-                          selectedExecutor.user?.avatar
-                            ? urlForLocal(selectedExecutor.user.avatar)
+                          selectedExecutor.userCard?.avatar
+                            ? urlForLocal(selectedExecutor?.userCard?.avatar)
                             : avatarMok
                         }
                         alt="avatar"
@@ -692,29 +703,32 @@ export const ProjectTracker = () => {
                       />
                       {selectExecutorOpen && (
                         <div className="tasks__head__executorDropdown">
-                          {projectBoard.projectUsers.map((user) => {
-                            return (
-                              <div
-                                className="executorDropdown__person"
-                                key={user.user_id}
-                                onClick={() => executorFilter(user)}
-                              >
-                                <p>{user.user?.fio}</p>
-                                <img
-                                  src={
-                                    user.user?.avatar
-                                      ? urlForLocal(user.user.avatar)
-                                      : avatarMok
-                                  }
-                                  alt="avatar"
-                                />
-                              </div>
-                            );
-                          })}
+                          {projectBoard &&
+                            projectBoard.length &&
+                            projectBoard.executors.map((user) => {
+                              return (
+                                <div
+                                  className="executorDropdown__person"
+                                  key={user?.userCard?.user_id}
+                                  onClick={() => executorFilter(user)}
+                                >
+                                  <p>{user?.userCard?.fio}</p>
+                                  <img
+                                    src={
+                                      user?.userCard?.avatar
+                                        ? urlForLocal(user?.userCard?.avatar)
+                                        : avatarMok
+                                    }
+                                    alt="avatar"
+                                  />
+                                </div>
+                              );
+                            })}
                         </div>
                       )}
                     </div>
                   )}
+                  {/* Список тегов */}
                   <div className="tasks__head__tags">
                     <div
                       className="tags__add"
@@ -745,7 +759,7 @@ export const ProjectTracker = () => {
 
                         {!tags.add && !tags.edit && (
                           <div className="tags__list__created">
-                            {projectBoard.mark.map((tag) => {
+                            {/* {projectBoard?.mark.map((tag) => {
                               return (
                                 <div className="tagItem" key={tag.id}>
                                   <p className="tagItem__description">
@@ -787,7 +801,7 @@ export const ProjectTracker = () => {
                                   </div>
                                 </div>
                               );
-                            })}
+                            })} */}
                           </div>
                         )}
                         {(tags.add || tags.edit) && (
@@ -858,50 +872,59 @@ export const ProjectTracker = () => {
                 </div>
               </div>
 
+
               {Boolean(modalActiveTicket) && (
                 <ModalTicket
                   active={modalActiveTicket}
                   setActive={setModalActiveTicket}
                   task={selectedTicket}
-                  projectId={projectBoard.id}
-                  projectName={projectBoard.name}
-                  projectUsers={projectBoard.projectUsers}
-                  projectOwnerId={projectBoard.owner_id}
-                  projectMarks={projectBoard.mark}
+                  projectId={projectBoard?.id}
+                  // projectName={projectBoard.name}
+                  projectName={projectBoard?.title}
+
+                  projectUsers={projectBoard?.executors}
+
+                  projectOwnerId={projectBoard?.creatorId}
+                  // projectMarks={projectBoard?.mark}
+                  projectMarks={[]}
                 />
               )}
 
               <div className="tasks__container">
                 {Boolean(projectBoard?.columns) &&
                   !filteredNoTasks &&
-                  Boolean(projectBoard.columns.length) &&
-                  projectBoard.columns.map((column) => {
+                  Boolean(projectBoard?.columns?.length) &&
+                  projectBoard?.columns.map((column) => {
                     return (
                       <div
                         key={column.id}
                         onDragOver={(e) => dragOverHandler(e)}
                         onDragEnter={() => dragEnterHandler(column.id)}
                         onDrop={(e) => dragDropHandler(e, column.id)}
-                        className={`tasks__board ${
-                          wrapperHover[column.id] ? "tasks__board__hover" : ""
-                        }`}
+                        className={`tasks__board ${wrapperHover[column.id] ? "tasks__board__hover" : ""
+                          }`}
                       >
                         <div className="board__head">
                           <span>{column.title}</span>
                           <div className="board__head__more">
+
+                            {/* плюсик для открытия модального окна для создания новой задачи */}
                             <span
                               className="add"
                               onClick={() => {
                                 selectedTabTask(
                                   column.id,
                                   projectBoard?.columns && column.tasks.length
-                                    ? column.tasks[0].priority - 1
+                                    ? column.tasks[0].execution_priority - 1
                                     : 1
                                 );
                               }}
                             >
                               +
                             </span>
+
+
+                            {/* троеточие для дополнительных действий с колонками, изменить, удалить */}
                             <span
                               onClick={() => {
                                 setOpenColumnSelect((prevState) => ({
@@ -915,6 +938,8 @@ export const ProjectTracker = () => {
                             </span>
                           </div>
                         </div>
+
+                        {/* Изменить и удалить (в колонках) */}
                         {openColumnSelect[column.id] && (
                           <div className="column__select">
                             <div
@@ -950,141 +975,166 @@ export const ProjectTracker = () => {
                             </div>
                           </div>
                         )}
+
+                        {/* Таскконтейнер */}
                         <div className="tasksContainer">
-                          {column.tasks.map((task) => {
-                            return (
-                              <div
-                                key={task.id}
-                                className={`tasks__board__item ${
-                                  taskHover[task.id] ? "task__hover" : ""
-                                }`}
-                                draggable={true}
-                                onDragStart={(e) =>
-                                  dragStartHandler(e, task, column.id)
-                                }
-                                onDragOver={(e) => dragOverTaskHandler(e, task)}
-                                onDragLeave={(e) => dragLeaveTaskHandler(e)}
-                                onDragEnd={() => dragEndTaskHandler()}
-                                onDrop={(e) =>
-                                  dragDropTaskHandler(e, task, column)
-                                }
-                                onClick={(e) => openTicket(e, task)}
-                              >
+                          {column &&
+                            column.tasks.map((task) => {
+                              return (
                                 <div
-                                  className="tasks__board__item__title"
-                                  onClick={() => {
-                                    if (window.innerWidth < 985) {
-                                      window.location.replace(
-                                        `/tracker/task/${task.id}`
-                                      );
-                                    }
-                                  }}
+                                  key={task.id}
+                                  className={`tasks__board__item ${taskHover[task.id] ? "task__hover" : ""
+                                    }`}
+                                  draggable={true}
+                                  onDragStart={(e) =>
+                                    dragStartHandler(e, task, column.id)
+                                  }
+                                  onDragOver={(e) =>
+                                    dragOverTaskHandler(e, task)
+                                  }
+                                  onDragLeave={(e) => dragLeaveTaskHandler(e)}
+                                  onDragEnd={() => dragEndTaskHandler()}
+                                  onDrop={(e) =>
+                                    dragDropTaskHandler(e, task, column)
+                                  }
+                                  onClick={(e) => openTicket(e, task)}
                                 >
-                                  <p className="task__board__item__title">
-                                    {task.title}
-                                  </p>
-                                </div>
-                                <p
-                                  dangerouslySetInnerHTML={{
-                                    __html: task.description,
-                                  }}
-                                  className="tasks__board__item__description"
-                                ></p>
-                                <div className="tasks__board__item__executor">
-                                  <span>
-                                    {task.executor?.fio
-                                      ? task.executor?.fio
-                                      : "Исполнитель не назначен"}
-                                  </span>
-                                  {task.executor?.avatar && (
-                                    <img
-                                      src={
-                                        task.executor?.avatar
-                                          ? urlForLocal(task.executor?.avatar)
-                                          : avatarMok
+                                  <div
+                                    className="tasks__board__item__title"
+                                    onClick={() => {
+                                      if (window.innerWidth < 985) {
+                                        window.location.replace(
+                                          `/tracker/task/${task.id}`
+                                        );
                                       }
-                                      alt="avatar"
-                                    />
+                                    }}
+                                  >
+                                    {/* Название таски */}
+                                    <p className="task__board__item__title">
+                                      {task.title}
+                                    </p>
+                                  </div>
+
+                                  {/* Описание таски */}
+                                  <p
+                                    dangerouslySetInnerHTML={{
+                                      __html: task.description,
+                                    }}
+                                    className="tasks__board__item__description"
+                                  ></p>
+
+                                  {/* Фамилия исполнителя */}
+                                  <div className="tasks__board__item__executor">
+                                    <span>
+                                      {task.executor?.userCard[0].fio ??
+                                        "Исполнитель не назначен"}
+                                    </span>
+                                    {task.executor?.userCard[0].avatar && (
+                                      <img
+                                        src={
+                                          task.executor?.userCard[0]?.avatar
+                                            ? urlForLocal(
+                                              task.executor?.userCard[0]
+                                                .avatar
+                                            )
+                                            : avatarMok
+                                        }
+                                        alt="avatar"
+                                      />
+                                    )}
+                                  </div>
+
+                                  {/* Теги бейджики */}
+                                  {Boolean(task.marks.length) && (
+                                    <div className="tasks__board__item__tags">
+                                      {task.marks.map((mark) => {
+                                        return (
+                                          <div
+                                            className="tagItem"
+                                            key={mark.mark.id}
+                                            style={{
+                                              background: mark.mark.color,
+                                            }}
+                                          >
+                                            <p>{mark.mark.slug}</p>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
                                   )}
-                                </div>
-                                {Boolean(task.mark.length) && (
-                                  <div className="tasks__board__item__tags">
-                                    {task.mark.map((tag) => {
-                                      return (
-                                        <div
-                                          className="tagItem"
-                                          key={tag.id}
-                                          style={{ background: tag.color }}
-                                        >
-                                          <p>{tag.slug}</p>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                                {typeof task.execution_priority ===
-                                  "number" && (
-                                  <div className="tasks__board__item__priority">
-                                    <p>Приоритет:</p>
-                                    <span
-                                      className={
-                                        priorityClass[task.execution_priority]
-                                      }
-                                    >
-                                      {priority[task.execution_priority]}
-                                    </span>
-                                  </div>
-                                )}
-                                {task.dead_line && (
-                                  <div className="tasks__board__item__deadLine">
-                                    <p>Срок исполнения:</p>
-                                    <span>
-                                      {getCorrectDate(task.dead_line)}
-                                    </span>
-                                  </div>
-                                )}
-                                <div className="tasks__board__item__info">
-                                  <div className="tasks__board__item__info__more">
-                                    <img
-                                      src={commentsBoard}
-                                      alt="commentsImg"
-                                    />
-                                    <span>
-                                      {task.comment_count}{" "}
-                                      {caseOfNum(
-                                        task.comment_count,
-                                        "comments"
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="tasks__board__item__info__more">
-                                    <img src={filesBoard} alt="filesImg" />
-                                    <span>
-                                      {task.files ? task.files : 0}{" "}
-                                      {caseOfNum(0, "files")}
-                                    </span>
-                                  </div>
-                                </div>
-                                <TrackerSelectColumn
-                                  columns={projectBoard.columns.filter(
-                                    (item) => item.id !== column.id
+
+                                  {/* Приоритет */}
+                                  {typeof task.execution_priority === "number" && (
+                                    <div className="tasks__board__item__priority">
+                                      <p>Приоритет:</p>
+                                      <span
+                                        className={priorityClass[task.execution_priority]}
+                                      >
+                                        {priority[task.execution_priority]}
+                                      </span>
+                                    </div>
                                   )}
-                                  currentColumn={column}
-                                  task={task}
-                                />
-                              </div>
-                            );
-                          })}
+
+                                  {/* Срок исполнения */}
+                                  {task.dead_line && (
+                                    <div className="tasks__board__item__deadLine">
+                                      <p>Срок исполнения:</p>
+                                      <span>
+                                        {getCorrectDate(task.dead_line)}
+                                      </span>
+                                    </div>
+                                  )}
+
+                                  {/* Количество комментариев */}
+                                  <div className="tasks__board__item__info">
+                                    <div className="tasks__board__item__info__more">
+                                      <img
+                                        src={commentsBoard}
+                                        alt="commentsImg"
+                                      />
+                                      <span>
+                                        {task.comments.length}{" "}
+                                        {caseOfNum(
+                                          task.comment_count,
+                                          "comments"
+                                        )}
+                                      </span>
+                                    </div>
+
+                                    {/* Количество файлов */}
+                                    <div className="tasks__board__item__info__more">
+                                      <img src={filesBoard} alt="filesImg" />
+                                      <span>
+                                        {task.files ? task.files : 0}{" "}
+                                        {caseOfNum(0, "files")}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  <TrackerSelectColumn
+                                    columns={projectBoard.columns.filter(
+                                      (item) => item.id !== column.id
+                                    )}
+                                    currentColumn={column}
+                                    task={task}
+                                  />
+                                </div>
+                              );
+                            })}
                         </div>
                       </div>
                     );
                   })}
+
+                {/* если нет колонок */}
                 {Boolean(projectBoard?.columns) &&
                   !Boolean(projectBoard.columns.length) && (
                     <div className="tasks__board__noItems">
                       В проекте нет задач.
                     </div>
                   )}
+
+                {/* если нет задач */}
                 {filteredNoTasks && (
                   <div className="tasks__board__noTasks">
                     <div className="tasks__board__noTasksInfo">
@@ -1102,6 +1152,8 @@ export const ProjectTracker = () => {
           )}
         </div>
       </div>
+
+      {/* модалка перед удалением колонки */}
       {acceptModalOpen && (
         <AcceptModal
           title={"В колонке еще есть задачи, Вы точно хотите удалить её ?"}
@@ -1109,6 +1161,7 @@ export const ProjectTracker = () => {
           agreeHandler={() => deleteColumn(currentColumnDelete)}
         />
       )}
+
       <Footer />
     </div>
   );

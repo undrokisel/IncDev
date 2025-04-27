@@ -97,7 +97,7 @@ export const ProjectTiket = ({ project, index }) => {
         to={`/tracker/project/${project.id}`}
         className="project__open-traker"
       >
-        <div className="project__link">{project.name}</div>
+        <div className="project__link">{project.title}</div>
 
         <div className="project__info">
           <p>Открытые задачи</p>

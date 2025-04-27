@@ -1,0 +1,280 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------------
+// skills
+// ------------------------------------------------------------
+model Skill {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // отношение многие ко многим
+  users       User[]
+  skillValues SkillValue[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String
+
+  // отношение многие ко многим
+  skills Skill[]
+
+  email        String   @unique
+  password     String
+  access_token String?
+  role         UserRole @default(DEVELOPER)
+  
+  status String @default("1")
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Связи: у одного пользователя много таск, комментариев и досок
+  createdTasks Task[] @relation("TaskCreator")
+  assignedTasks Task[] @relation("TaskExecutor")
+  comments Comment[]
+  boards   Board[]
+  userCard UserCard[]
+
+  createdProjects Project[] @relation("ProjectCreator")
+  executors Project[] @relation("ProjectExecutors")
+
+  timers   Timer[]
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  title       String?
+  description String?
+  status      Int?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  dead_line   DateTime?
+
+  creator User @relation("ProjectCreator", fields: [creatorId], references: [id])
+  creatorId Int
+
+  executors User[] @relation("ProjectExecutors")
+
+  // у одного проекта много таск, колонок и досок
+  tasks   Task[]
+  columns Column[]
+  boards  Board[]
+
+  // user   User? @relation(fields: [userId], references: [id])
+  // userId Int?
+}
+
+model Column {
+  id       Int     @id @default(autoincrement())
+  title    String?
+  priority Int?
+
+  // связь один к одному
+  // колонка принадлежит конкретному проекту (обязательно)
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  // у одной колонки много заданий
+  tasks     Task[]
+}
+
+model Task {
+  id          Int     @id @default(autoincrement())
+  title       String?
+  description String?
+  // priority    Int?
+  execution_priority Int @default(0)
+  status      Int   @default(1) // Возможные значения: ACTIVE, ARCHIVED
+
+  // создатель задачи
+  creator   User @relation("TaskCreator", fields: [creatorId], references: [id])
+  creatorId Int
+
+  // одно задание принадлежит одному исполнителю 
+  // (опционально) - исполнитель может и не быть назначен в какой-то момент
+  executor   User? @relation("TaskExecutor", fields: [executorId], references: [id])
+  executorId Int?
+
+  // одна таска принадлежит одной колонке (обязательно)
+  column   Column @relation(fields: [columnId], references: [id])
+  columnId Int
+
+  // у одного задания может быть много комментов  
+  comments Comment[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  dead_line DateTime?
+
+  // каждая таска принадлежит конкретному проекту (опционально)
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+
+  marks TaskMark[] // Relation to the join table
+  timers       Timer[]
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  text        String
+
+  // комент принадлежит одному автору - пользователю
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  // комент связан с конкретной таской
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+
+  subComments Int[]
+  parent_id   Int?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  isPinned    Boolean  @default(false)
+  status      Int      @default(1) // 1 - активный, 0 - удаленный
+}
+
+model Board {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // у доски есть один владелец
+  owner   User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+
+  // доска принадлежит одному проекту
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+
+  // у доски много отметок
+  marks     Mark[]
+  boardMark BoardMark[]
+}
+
+model Mark {
+  id    Int    @id @default(autoincrement())
+  title String
+  slug  String
+  color String
+
+  // одна отметка может принадлежать разным доскам и таскам
+  boards     Board[]
+  boardMarks BoardMark[]
+  tasks      TaskMark[] // Relation to the join table
+}
+
+model TaskMark {
+  taskId Int
+  markId Int
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  mark Mark @relation(fields: [markId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, markId]) // Composite primary key
+}
+
+model BoardMark {
+  id      Int @id @default(autoincrement())
+  boardId Int
+  markId  Int
+
+  boards Board @relation(fields: [boardId], references: [id])
+  marks  Mark  @relation(fields: [markId], references: [id])
+}
+
+// ------------------------------------------------------------
+// faqs
+// ------------------------------------------------------------
+
+model Rubric {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // у одной рубрики может быть много вопросов
+  faqs Faq[]
+}
+
+model Faq {
+  id       Int      @id @default(autoincrement())
+  question String
+  // массив строк
+  answer   String[]
+
+  rubric   Rubric @relation(fields: [rubricId], references: [id])
+  rubricId Int
+}
+
+model UserCard {
+  id Int @id @default(autoincrement())
+
+  // один пользователь может иметь разные карточки
+  // но одна карточка принадлежит только одному пользователю
+  id_user Int
+  user    User @relation(fields: [id_user], references: [id])
+
+  photo         String?
+  fio           String
+  specification String
+  vc_text       String?
+  username      String?
+
+  // Связь с навыками
+  skillValues SkillValue[]
+}
+
+model SkillLevel {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  skillValues SkillValue[]
+}
+
+model SkillValue {
+  id Int @id @default(autoincrement())
+
+  // один скилвелью принадлежит одному пользователю
+  userCardId Int
+  userCard   UserCard @relation(fields: [userCardId], references: [id])
+
+  skill   Skill @relation(fields: [skillId], references: [id])
+  skillId Int
+
+  skillLevel   SkillLevel @relation(fields: [skillLevelId], references: [id])
+  skillLevelId Int
+}
+
+enum UserRole {
+  ADMIN
+  DEVELOPER
+  COMPANY
+}
+
+model Timer {
+  id           Int      @id @default(autoincrement())
+  taskId       Int
+  userId       Int
+  startTime    DateTime @default(now())
+  endTime      DateTime?
+  deltaSeconds Int      @default(0)
+  isActive     Boolean  @default(true)
+  
+  task         Task     @relation(fields: [taskId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
+}
+

@@ -37,6 +37,9 @@ export const getToken = () => {
   return tParam ? { Authorization: tParam } : {};
 };
 
+/**
+ * Эта функция полезна для переноса параметров текущей страницы при переходе на другой URL, сохраняя при этом существующие параметры.
+ */
 export const urlHasParams = (url) =>
   url.indexOf("?") > 0
     ? `${url}&${window.location.search.substr(1)}`

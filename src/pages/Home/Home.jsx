@@ -26,37 +26,16 @@ const Home = () => {
   useEffect(() => {
     setIsLoadingMore(true);
 
-    // apiRequest("/profile", {
-    //   params: { limit: 1000 },
-    // }).then((profileArr) => {
-    //   dispatch(profiles(profileArr));
-    //   setIsLoadingMore(false);
-    // });
+    apiRequest("/profile", {
+      params: { limit: 1000 },
+    }).then((profileArr) => {
+      dispatch(profiles(profileArr));
+      setIsLoadingMore(false);
+    });
 
-    const profileArr = []
-    dispatch(profiles(profileArr));
-    setIsLoadingMore(false);
-
-    // apiRequest("/skills/skills-on-main-page", {}).then((skills) => {
-    //   if (!skills) {
-    //     return [];
-    //   }
-    //   const keys = Object.keys(skills);
-    //   const values = Object.values(skills);
-
-    //   const tempTags = values.map((value, index) =>
-    //     value.map((val) => {
-    //       return { id: val.id, value: val.tags, name: keys[index] };
-    //     })
-    //   );
-    //   dispatch(tags(tempTags));
-    // });
-
-
-      const skills = {
-        skills_front: [{id: 1, tags: 'frontend'}], 
-        skills_back: [{id: 2, tags: 'backend'}],  
-        skills_design: [{id: 3, tags: 'design'}],
+    apiRequest("/skills/skills-on-main-page", {}).then((skills) => {
+      if (!skills) {
+        return [];
       }
       const keys = Object.keys(skills);
       const values = Object.values(skills);
@@ -67,11 +46,26 @@ const Home = () => {
         })
       );
       dispatch(tags(tempTags));
+    });
+
+
+      // const skills = {
+      //   skills_front: [{id: 1, tags: 'frontend'}], 
+      //   skills_back: [{id: 2, tags: 'backend'}],  
+      //   skills_design: [{id: 3, tags: 'design'}],
+      // }
+      // const keys = Object.keys(skills);
+      // const values = Object.values(skills);
+
+      // const tempTags = values.map((value, index) =>
+      //   value.map((val) => {
+      //     return { id: val.id, value: val.tags, name: keys[index] };
+      //   })
+      // );
+      // dispatch(tags(tempTags));
 
 
   }, [index]);
-
-
 
 
   const loadMore = (count) => {

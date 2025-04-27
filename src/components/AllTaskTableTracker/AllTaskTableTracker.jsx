@@ -15,10 +15,13 @@ const AllTaskTableTracker = ({ filteredAllTasks, projects, loader }) => {
   const [itemOffset, setItemOffset] = useState(0);
 
   useEffect(() => {
+
     setItems(filteredAllTasks);
     const endOffset = itemOffset + itemsPerPage;
     setCurrentItems(filteredAllTasks?.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(filteredAllTasks?.length / itemsPerPage));
+
+
   }, [filteredAllTasks]);
 
   useEffect(() => {
@@ -31,6 +34,8 @@ const AllTaskTableTracker = ({ filteredAllTasks, projects, loader }) => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
   };
+
+  
 
   return (
     <>

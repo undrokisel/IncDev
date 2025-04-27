@@ -62,39 +62,39 @@ export const ModalRegistration = ({ active, setActive }) => {
     if (validateForm()) {
       return;
     }
-    // setLoader(true);
-    // apiRequest("/register/sign-up", {
-    //   method: "POST",
-    //   data: {
-    //     username: inputsValue.userName,
-    //     email: inputsValue.email,
-    //     password: inputsValue.password,
-    //   },
-    // }).then((data) => {
-    //   setLoader(false);
-    //   if (!data) {
-    //     showNotification({
-    //       show: true,
-    //       text: "Аккаунт с таким логином или email уже существует",
-    //       type: "error",
-    //     });
-    //   } else {
-    //     closeModal();
-    //     showNotification({
-    //       show: true,
-    //       text: "Аккаунт успешно создан",
-    //       type: "success",
-    //     });
-    //   }
-    // });
-    setTimeout(()=> {
+    setLoader(true);
+    apiRequest("/register/sign-up", {
+      method: "POST",
+      data: {
+        username: inputsValue.userName,
+        email: inputsValue.email,
+        password: inputsValue.password,
+      },
+    }).then((data) => {
+      setLoader(false);
+        if (!data) {
+          showNotification({
+            show: true,
+            text: "Аккаунт с таким логином или email уже существует",
+            type: "error",
+          });
+        } else {
+          closeModal();
+          showNotification({
+            show: true,
+            text: "Аккаунт успешно создан",
+            type: "success",
+          });
+        }
+    });
+    setTimeout(() => {
       closeModal();
       showNotification({
         show: true,
         text: "Аккаунт успешно создан",
         type: "success",
       });
-    }, 1000)
+    }, 1000);
   };
 
   const closeModal = () => {

@@ -44,7 +44,7 @@ import avatarMok from "assets/images/avatarMok.png";
 
 import { getCorrectDate } from "../../../Calendar/calendarHelper";
 import "./modalTicket.scss";
-import { commentsMock } from "@store/profile";
+// import { commentsMock } from "@store/profile";
 
 registerLocale("ru", ru);
 
@@ -74,11 +74,17 @@ export const ModalTiсket = ({
   );
   const [dropListOpen, setDropListOpen] = useState(false);
   const [dropListMembersOpen, setDropListMembersOpen] = useState(false);
+
   const [executor, setExecutor] = useState(task.executor);
+  // todo execution_priotity ? 
   const [taskPriority, setTaskPriority] = useState(task.execution_priority);
-  const [members, setMembers] = useState(task.taskUsers);
-  const [taskTags, setTaskTags] = useState(task.mark);
+
+
+  // members - исполнители задачи
+  const [members, setMembers] = useState(projectUsers);
+  const [taskTags, setTaskTags] = useState(task.marks);
   const [users, setUsers] = useState([]);
+
   const [timerStart, setTimerStart] = useState(false);
   const [timerInfo, setTimerInfo] = useState({});
   // const [uploadedFile, setUploadedFile] = useState(null);
@@ -89,6 +95,7 @@ export const ModalTiсket = ({
   });
   const [timerId, setTimerId] = useState(null);
   const [taskFiles, setTaskFiles] = useState([]);
+
   const [correctProjectUsers, setCorrectProjectUsers] = useState(projectUsers);
   const [correctProjectTags, setCorrectProjectTags] = useState([]);
   const [executorId, setExecutorId] = useState(task.executor_id);
@@ -201,19 +208,32 @@ export const ModalTiсket = ({
             comment_id: subComment.id,
             status: 0,
           },
-        }).then(() => {});
+        }).then(() => { });
       });
     }
   }
 
+  // старый вариант not to use
+  // const addSubComment = comments;
+  //   addSubComment.forEach((comment) => {
+  //     if (comment.id === commentId) {
+  //       comment.subComments.push(subComment);
+  //     }
+  //   });
+  //   setComments(addSubComment);
+
   function addSubComment(commentId, subComment) {
-    const addSubComment = comments;
-    addSubComment.forEach((comment) => {
-      if (comment.id === commentId) {
-        comment.subComments.push(subComment);
-      }
-    });
-    setComments(addSubComment);
+    setComments(prevComments =>
+      prevComments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            subComments: [...comment.subComments, subComment]
+          };
+        }
+        return comment;
+      })
+    );
   }
 
   function subCommentDelete(subComment) {
@@ -311,9 +331,9 @@ export const ModalTiсket = ({
     //   dispatch(setProjectBoardFetch(projectId));
     // });
 
-      setDropListMembersOpen(false);
-      // setMembers((prevValue) => [...prevValue, res]);
-  
+    setDropListMembersOpen(false);
+    // setMembers((prevValue) => [...prevValue, res]);
+
   }
 
   function deleteMember(person) {
@@ -328,45 +348,40 @@ export const ModalTiсket = ({
     //   dispatch(setProjectBoardFetch(projectId));
     // });
 
-      setMembers(members.filter((item) => item.user_id !== person.user_id));
+    setMembers(members.filter((item) => item.user_id !== person.user_id));
   }
 
   useEffect(() => {
     initListeners();
-    
-    // apiRequest(
-    //   `/comment/get-by-entity?entity_type=2&entity_id=${task.id}`
-    // ).then((res) => {
-    //   const comments = res.reduce((acc, cur) => {
-    //     if (!cur.parent_id) {
-    //       acc.push({ ...cur, subComments: [] });
-    //     } else {
-    //       acc.forEach((item) => {
-    //         if (item.id === cur.parent_id) item.subComments.push(cur);
-    //       });
-    //     }
-    //     return acc;
-    //   }, []);
-    //   setComments(comments);
-    // });
 
+    // заход за комментариями
+    apiRequest(
+      `/comment/get-by-entity?entity_type=2&entity_id=${task.id}`
+    ).then((res) => {
 
-    const comments = commentsMock.reduce((acc, cur) => {
-      if (!cur.parent_id) {
-        acc.push({ ...cur, subComments: [] });
-      } else {
-        acc.forEach((item) => {
-          if (item.id === cur.parent_id) item.subComments.push(cur);
-        });
-      }
-      return acc;
-    }, []);
-    setComments(comments);
+      // reduceRight - потому что данные приходят отсортированными от самых свежих, а мы будем перебирать от самых старых
+      const comments = res
+        // убираем "псевдоудаленные" комментарии
+        .filter(comment => comment.status !== 0)
+        .reduceRight((acc, comment) => {
+          if (!comment.parent_id) {
+            acc.push({ ...comment, subComments: [] });
+          } else {
+            acc.forEach((item) => {
+              if (item.id === comment.parent_id) {
+                item.subComments.push(comment);
+              }
+            });
+          }
+          return acc;
+        }, []);
+      setComments(comments);
+    });
 
-
+    // заход за таймерами
     apiRequest(`/timer/get-by-entity?entity_type=2&entity_id=${task.id}`).then(
       (res) => {
-        
+
         let timerSeconds = 0;
         res.length &&
           res.forEach((time) => {
@@ -388,6 +403,7 @@ export const ModalTiсket = ({
       }
     );
 
+    // заход за файлами
     apiRequest(`/file/get-by-entity?entity_type=2&entity_id=${task.id}`).then(
       (res) => {
         if (Array.isArray(res)) {
@@ -396,22 +412,26 @@ export const ModalTiсket = ({
       }
     );
 
+    // получение из стора (profileInfo) пользователей проекта
     if (
+      // если пользователь - разработчик
       localStorage.getItem("role_status") !== "18" &&
+      // и его еще нет среди пользователей проекта? 
       Boolean(
         !correctProjectUsers.find(
           (item) => item.user_id === profileInfo.id_user
         )
       )
     ) {
+      // то добавляем его в пользователи проекта
       setCorrectProjectUsers((prevState) => [
         ...prevState,
         {
           user: {
-            avatar: profileInfo.photo,
-            fio: profileInfo.fio,
+            avatar: profileInfo?.userCard?.photo,
+            fio: profileInfo?.userCard?.fio,
           },
-          user_id: profileInfo.id_user,
+          user_id: profileInfo?.userCard?.id_user,
         },
       ]);
     }
@@ -503,14 +523,16 @@ export const ModalTiсket = ({
   }
 
   useEffect(() => {
-    let ids = members.map((user) => user.user_id);
+    let ids = members.map((user) => user.id);
+  
     setUsers(
-      projectUsers.reduce((acc, cur) => {
-        if (!ids.includes(cur.user_id)) acc.push(cur);
+      projectUsers.reduce((acc, user) => {
+        if (!ids.includes(user.userCard[0].id_user)) acc.push(user);
         return acc;
       }, [])
     );
   }, [members]);
+
 
   function copyTicketLink() {
     navigator.clipboard.writeText(
@@ -622,6 +644,8 @@ export const ModalTiсket = ({
     >
       <div className="modal-tiket__content">
         <div className="content">
+
+          {/* Название проекта, заголовок */}
           <h3 className="title-project">
             <img src={category} className="title-project__category"></img>
             Проект: {projectName}
@@ -632,7 +656,12 @@ export const ModalTiсket = ({
               <img src={fullScreen}></img>
             </Link>
           </h3>
+
+
           <div className="content__task">
+
+
+            {/* поле редактирования заголовка задачи */}
             {editOpen ? (
               <input
                 maxLength="100"
@@ -647,7 +676,10 @@ export const ModalTiсket = ({
             ) : (
               <h5 className="taskName">{inputsValue.title}</h5>
             )}
+
             <div className="content__description">
+
+              {/* поле редактирования описания задачи */}
               {editOpen ? (
                 <CKEditor
                   editor={ClassicEditor}
@@ -682,6 +714,9 @@ export const ModalTiсket = ({
               )}
               {/*<img src={taskImg} className="image-task"></img>*/}
             </div>
+
+
+            {/* Файл трекер */}
             {Boolean(taskFiles.length) && (
               <div className="task__files">
                 {taskFiles.map((file) => {
@@ -696,6 +731,10 @@ export const ModalTiсket = ({
                 })}
               </div>
             )}
+
+            {/* загрузка файлов */}
+            {/* Кнопки редактирования */}
+            {/* не использовать */}
             {/*{uploadedFile && (*/}
             {/*  <div className="fileLoaded">*/}
             {/*    {uploadedFile.map((file) => {*/}
@@ -715,6 +754,7 @@ export const ModalTiсket = ({
             {/*  </div>*/}
             {/*)}*/}
             <div className="content__communication">
+              {/* не использовать */}
               {/*<p className="tasks">*/}
               {/*  <button*/}
               {/*    onClick={() => {*/}
@@ -726,6 +766,9 @@ export const ModalTiсket = ({
               {/*    Добавить под задачу*/}
               {/*  </button>*/}
               {/*</p>*/}
+
+
+              {/* Кнопка загрузки файлов и количество файлов */}
               <div className="file">
                 <div className="input__wrapper">
                   <input
@@ -745,6 +788,9 @@ export const ModalTiсket = ({
                 {caseOfNum(taskFiles.length, "files")}
               </div>
             </div>
+
+
+            {/* Поле - оставить комментарий */}
             <div className="content__input">
               <input
                 placeholder="Оставить комментарий"
@@ -762,6 +808,9 @@ export const ModalTiсket = ({
                 onClick={createComment}
               ></img>
             </div>
+
+
+            {/* Список комментариев */}
             <div className="comments__list">
               {comments.map((comment) => {
                 return (
@@ -776,6 +825,8 @@ export const ModalTiсket = ({
                 );
               })}
             </div>
+
+
           </div>
         </div>
         <div className="workers">
@@ -783,12 +834,19 @@ export const ModalTiсket = ({
             <span className="exit" onClick={() => setActive(false)}></span>
             <p className="workers__creator">Создатель : {task.user?.fio}</p>
 
+
+              {/* Исполнитель */}
+
+              {console.log("--------------------executor----------------------")}
+            {console.log(executor)}
+
+
             {executor ? (
               <div className="executor">
-                <p>Исполнитель: {executor.fio}</p>
+                <p>Исполнитель: {executor?.userCard[0]?.fio}</p>
                 <img
                   src={
-                    executor?.avatar ? urlForLocal(executor.avatar) : avatarMok
+                    executor?.userCard[0]?.avatar ? urlForLocal(executor?.userCard[0]?.avatar) : avatarMok
                   }
                   alt="avatar"
                 />
@@ -814,6 +872,9 @@ export const ModalTiсket = ({
                       className="dropdownList__close"
                       onClick={() => setDropListOpen(false)}
                     />
+
+                    {console.log("correctProjectUsers-------------------")}
+                    {console.log(correctProjectUsers)}
                     {correctProjectUsers.map((person) => {
                       return (
                         <div
@@ -842,14 +903,15 @@ export const ModalTiсket = ({
               <div className="members">
                 <p>Участники:</p>
                 <div className="members__list">
+
                   {members.map((member) => {
                     return (
-                      <div className="worker" key={member.user_id}>
-                        <p>{member.fio}</p>
+                      <div className="worker" key={member?.userCard[0]?.id}>
+                        <p>{member?.userCard[0]?.fio}</p>
                         <img
                           src={
-                            member?.avatar
-                              ? urlForLocal(member.avatar)
+                            member?.userCard[0]?.avatar
+                              ? urlForLocal(member?.userCard[0]?.avatar)
                               : avatarMok
                           }
                           alt="avatar"
@@ -1085,7 +1147,7 @@ export const ModalTiсket = ({
               onClick={archiveTask}
               className={
                 profileInfo.id_user === projectOwnerId ||
-                profileInfo.id_user === task.user_id
+                  profileInfo.id_user === task.user_id
                   ? ""
                   : "disable"
               }
@@ -1097,7 +1159,7 @@ export const ModalTiсket = ({
               onClick={deleteTask}
               className={
                 profileInfo.id_user === projectOwnerId ||
-                profileInfo.id_user === task.user_id
+                  profileInfo.id_user === task.user_id
                   ? ""
                   : "disable"
               }

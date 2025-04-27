@@ -106,6 +106,8 @@ export const TrackerModal = ({
   ];
 
   function createTab() {
+
+
     if (!valueColumn) {
       showNotification({ show: true, text: "Введите название", type: "error" });
       return;
@@ -146,8 +148,9 @@ export const TrackerModal = ({
         status: 1,
         user_id: localStorage.getItem("id"),
         column_id: selectedTab,
-        execution_priority: selectedPriority ? selectedPriority.key : "",
-        priority: priorityTask,
+        execution_priority: selectedPriority ? selectedPriority.key : 0,
+        // todo а нужно ли это поле? 
+        // priority: priorityTask,
         dead_line: deadLineDate ? getCorrectRequestDate(deadLineDate) : "",
       },
     }).then((res) => {
@@ -170,6 +173,7 @@ export const TrackerModal = ({
             setTaskTags([]);
           });
         }
+
         if (selectedExecutorTask.user_id) {
           apiRequest("/task/update-task", {
             method: "PUT",
@@ -185,12 +189,14 @@ export const TrackerModal = ({
             setSelectedExecutorTask("Выберите исполнителя задачи");
             setSelectedPriority(null);
           });
+
         } else {
           setActive(false);
           setValueTiket("");
           setDescriptionTicket("");
           dispatch(setProjectBoardFetch(projectBoard.id));
         }
+        
         setDeadLineDate("");
         showNotification({
           show: true,

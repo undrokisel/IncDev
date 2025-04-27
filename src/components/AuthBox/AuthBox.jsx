@@ -13,7 +13,6 @@ import ModalErrorLogin from "@components/Modal/ModalErrorLogin/ModalErrorLogin";
 import ModalRegistration from "@components/Modal/ModalRegistration/ModalRegistration";
 import ModalResetPassword from "@components/Modal/ModalResetPassword/ModalResetPassword";
 
-import authHead from "assets/icons/authHead.svg";
 import eyePassword from "assets/icons/passwordIcon.svg";
 
 import "./authBox.scss";
@@ -33,16 +32,16 @@ export const AuthBox = ({ title }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem("auth_token")) {
-      dispatch(auth(false));
-    }
+    // if (!localStorage.getItem("auth_token")) {
+    //   dispatch(auth(false));
+    // }
     // dispatch(auth(true));
   }, []);
 
   useEffect(() => {
-    if (isAuth) {
-      navigate("/");
-    }
+    // if (isAuth) {
+    //   navigate("/");
+    // }
   });
 
   const submitHandler = () => {
@@ -50,84 +49,46 @@ export const AuthBox = ({ title }) => {
     if (!isLoading) {
       dispatch(loading(true));
 
-      // apiRequest("/user/login", {
-      //   method: "POST",
-      //   data: formData,
-      // }).then((res) => {
-      //   if (!res.access_token) {
-      //     setError("Введены некоректные данные для входа");
-      //     setModalError(true);
-      //     dispatch(loading(false));
-      //   } else {
-      //     localStorage.setItem("auth_token", res.access_token);
-      //     localStorage.setItem("id", res.id);
-      //     localStorage.setItem("cardId", res.card_id);
-      //     localStorage.setItem("role_status", res.status);
-      //     localStorage.setItem(
-      //       "access_token_expired_at",
-      //       res.access_token_expired_at
-      //     );
-      //     dispatch(auth(true));
-      //     dispatch(setUserInfo(res));
-      //     dispatch(loading(false));
-      //     dispatch(setRole("ROLE_PARTNER"));
-      //   }
-      // });
+      apiRequest("/user/login", {
+        method: "POST",
+        data: formData,
+      })
+        .then((res) => {
+          if (!res.access_token) {
+            setError("Введены некоректные данные для входа");
+            setModalError(true);
+            dispatch(loading(false));
+          } else {
+            localStorage.setItem("auth_token", res.access_token);
+            localStorage.setItem("id", res.id);
+            //     localStorage.setItem("cardId", res.card_id);
+            localStorage.setItem("role_status", res.status);
+            localStorage.setItem(
+              "access_token_expired_at",
+              res.access_token_expired_at
+            );
+            dispatch(auth(true));
+            dispatch(setUserInfo(res));
+            dispatch(loading(false));
 
-      const username = formData.get("username");
-      const password = formData.get("password");
+            dispatch(setRole("ROLE_PARTNER"));
+          }
+        })
+        .catch((error) => console.log(error));
 
-      const res = {      
-        access_token_expired_at: 10,
-      };
-
-      if (username === "developer@gmail.com" && password === "developer") {
-        res.access_token = "developer";
-        res.status = 17;
-        res.id = 1;
-        res.card_id = 1; 
-      }
-      if (username === "partner@gmail.com" && password === "partner") {
-        res.access_token = "partner";
-        // 18 - партнер
-        res.status = 18;
-        res.id = 2;
-        res.card_id = 2;
-      }
-
-      if (!res.access_token) {
-        setError("Введены некоректные данные для входа");
-        setModalError(true);
-        dispatch(loading(false));
-      } else {
-        localStorage.setItem("auth_token", res.access_token);
-        localStorage.setItem("id", res.id);
-        localStorage.setItem("cardId", res.card_id);
-        localStorage.setItem("role_status", res.status);
-        localStorage.setItem(
-          "access_token_expired_at",
-          res.access_token_expired_at
-        );
-        dispatch(auth(true));
-        dispatch(setUserInfo(res));
-        dispatch(loading(false));
-        dispatch(setRole("ROLE_PARTNER"));
-      }
     }
   };
 
   return (
     <div className="auth-box">
-      <h2 className="auth-box__header">
-        Вход 
-        {/* <img src={authHead} alt="authImg" /> */}
-      </h2>
+      <h2 className="auth-box__header">Вход</h2>
       <div className="auth-box__title">
         <span>{title}</span>
       </div>
+
       <form ref={ref} className="auth-box__form">
-        <label htmlFor="login">Ваш email *</label>
-        <input id="login" type="text" name="username" placeholder="Логин" />
+        <label htmlFor="email">Ваш email *</label>
+        <input id="email" type="text" name="email" placeholder="Email" />
 
         <label htmlFor="password">Ваш пароль*</label>
         <div className="inputWrapper">

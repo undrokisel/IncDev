@@ -5,7 +5,7 @@ import questionIcon from "assets/images/faq/question.svg";
 
 import "./FrequentlyAskedQuestionsItem.scss";
 
-export const FrequentlyAskedQuestionsItem = ({ rubric }) => {
+export const FrequentlyAskedQuestionsItem = ({ rubric, faqs }) => {
   return (
     <div className="frequently-asked-questions-item">
       <div className="frequently-asked-questions-item__head">
@@ -13,16 +13,16 @@ export const FrequentlyAskedQuestionsItem = ({ rubric }) => {
           <img src={questionIcon} alt="" />
         </div>
         <div className="frequently-asked-questions-item__title">
-          {rubric?.title}
+          {rubric?.name}
         </div>
       </div>
-      {rubric?.questions?.map((question) => (
+      {faqs?.map((question) => (
         <Link
           key={question.id}
           to={`/frequently-asked-question/${question.id}`}
           className="frequently-asked-questions-item__body"
         >
-          <p>{question.title}</p>
+          <p>{question.question}</p>
         </Link>
       ))}
     </div>

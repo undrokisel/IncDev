@@ -38,13 +38,11 @@ import noProjects from "assets/images/noProjects.png";
 import statusTimeTask from "assets/images/statusTimeTask.svg";
 
 import "./tracker.scss";
-import { projects } from "@store/profile";
-
+// import { projects } from "@store/profile";
 
 export const Tracker = () => {
   const dispatch = useDispatch();
-  // const projects = useSelector(getProjects);
-
+  const projects = useSelector(getProjects);
   const tab = useSelector(getToggleTab);
 
   const [allTasks, setAllTasks] = useState([]);
@@ -59,49 +57,50 @@ export const Tracker = () => {
   useEffect(() => {
     setLoader(true);
 
-    // apiRequest(
-    //   `/project/project-list?user_id=${localStorage.getItem(
-    //     "id"
-    //   )}&expand=columns`
-    // ).then((el) => {
-    //   dispatch(setAllProjects(el.projects));
-    //   setLoader(false);
+    // запрос проектов
+    apiRequest(
+      `/projects/projects-list?user_id=${localStorage.getItem(
+        "id"
+      )}&expand=columns`
+    ).then((el) => {
+      // все архивные (законченные) таски в локальный стейт
+      // setAllCompletedTasks(
+      //   el.projects
+      //     .filter((project) => {
+      //       if (project.status === 10 && project.columns.length) {
+      //         return project;
+      //       }
+      //     })
+      //     .map((project) => {
+      //       return project.columns;
+      //     })
+      //     .reduce((acu, curr) => {
+      //       curr.forEach((item) => {
+      //         acu.push(...item.tasks);
+      //       });
+      //       return acu;
+      //     }, [])
+      // );
 
-    // setAllCompletedTasks(el.projects.filter((project) => {
-    //   if (project.status === 10 && project.columns.length) {
-    //     return project
-    //   }
-    // }).map((project) => { return project.columns}).reduce((acu, curr) => {
-    //   curr.forEach((item) => {
-    //     acu.push(...item.tasks)
-    //   })
-    //   return acu
-    // }, []))
+      // диспатчим здесь вообще все проекты
+      dispatch(setAllProjects(el.projects));
+      setLoader(false);
+    });
 
-    // });
+    // запрос задач
+    apiRequest(
+      `/task/get-user-tasks?user_id=${localStorage.getItem("id")}&expand=timers`
+    ).then((el) => {
+      // 0 архивный статус
+      const allTasks = el ? el.filter((item) => item.status !== 0) : [];
+      const completedTasks = el ? el.filter((item) => item.status === 0) : [];
 
-    dispatch(setAllProjects(projects));
-    setLoader(false);
-
-    // apiRequest(
-    //   `/task/get-user-tasks?user_id=${localStorage.getItem("id")}&expand=timers`
-    // ).then((el) => {
-
-    // const allTasks = el ? el.filter((item) => item.status !== 0) : [];
-    // const completedTasks = el ? el.filter((item) => item.status === 0) : [];
-    // setAllTasks(allTasks);
-    // setFilteredAllTasks(allTasks);
-    // setAllCompletedTasks(completedTasks);
-    // setFilterCompleteTasks(completedTasks);
-
-    // });
-
-    const allTasks = projects ? projects.filter((item) => item.status !== 0): [];
-    const completedTasks = projects ? projects.filter((item) => item.status === 0) : [];
-    setAllTasks(allTasks);
-    setFilteredAllTasks(allTasks);
-    setAllCompletedTasks(completedTasks);
-    setFilterCompleteTasks(completedTasks);
+      // в локальный стейт
+      setAllTasks(allTasks);
+      setFilteredAllTasks(allTasks);
+      setAllCompletedTasks(completedTasks);
+      setFilterCompleteTasks(completedTasks);
+    });
   }, []);
 
   const toggleTabs = (index) => {
@@ -175,8 +174,9 @@ export const Tracker = () => {
             onClick={() => toggleTabs(2)}
           >
             <img src={tasks} alt="img" />
-            <p>Все мои задачи</p>
+            <p>Все мои задачи (трекер)</p>
           </div>
+
           <div
             className={
               tab === 3 ? "tab active-tab archiveTab" : "tab archiveTab"
@@ -213,11 +213,10 @@ export const Tracker = () => {
                   ""
                 );
               })}
+
             {typeof projects === "object" &&
-              (!Boolean(projects.length) ||
-                !Boolean(
-                  projects?.filter((project) => project.status !== 10).length
-                )) &&
+              (!projects.length ||
+                !projects?.filter((project) => project.status !== 10).length) &&
               !loader && (
                 <div className="no-projects">
                   <div className="no-projects__createNew">
@@ -252,9 +251,7 @@ export const Tracker = () => {
                   }}
                 >
                   {/* <img src={addProjectImg} alt="#"></img> */}
-                  <p className="createProjectBtn__text">
-                    Создать задачу
-                  </p>
+                  <p className="createProjectBtn__text">Создать проект</p>
                 </BaseButton>
               </>
             )}
@@ -308,11 +305,13 @@ export const Tracker = () => {
 
             {loader && <Loader style="pink" />}
 
-            <AllTaskTableTracker
-              loader={loader}
-              filteredAllTasks={filteredAllTasks}
-              projects={projects}
-            />
+            {projects && projects.length && (
+              <AllTaskTableTracker
+                loader={loader}
+                filteredAllTasks={filteredAllTasks}
+                projects={projects}
+              />
+            )}
 
             <div className="taskList__time">
               <div className="taskList__time-compited">
@@ -323,7 +322,7 @@ export const Tracker = () => {
               </div>
               <div className="taskList__time-all">
                 <h3>Общее время:</h3>
-                <p>{"4 ч 34 мин"}</p>
+                <p>{"4 ч 14 мин"}</p>
               </div>
               <div className="taskList__time-status">
                 <div>
@@ -355,11 +354,17 @@ export const Tracker = () => {
             }
           >
             <div className="archive__tasks">
+
+
+              {/* Архив задач заголовок */}
               <div className="archive__title">
                 <h3>Архив задач:</h3>
                 <p>
                   {`${filterCompleteTasks && filterCompleteTasks.length} 
-                    ${caseOfNum(filterCompleteTasks && filterCompleteTasks.length, "tasks")}`}
+                    ${caseOfNum(
+                    filterCompleteTasks && filterCompleteTasks.length,
+                    "tasks"
+                  )}`}
                 </p>
 
                 <div className="archive__tasks-period">
@@ -378,6 +383,8 @@ export const Tracker = () => {
                 </div>
                 <div className="archive__tasks__search">
                   <img src={search} alt="search" />
+
+                  {/* Поиск фильтр архивных задач */}
                   <input
                     type="text"
                     placeholder="Найти задачу"
@@ -392,19 +399,21 @@ export const Tracker = () => {
                 loader={loader}
                 filterCompleteTasks={filterCompleteTasks}
               />
+
             </div>
+
+            {/* Архив проектов */}
             <div className="archive__projects">
               <div className="archive__projects-title">
                 <h3>Архив проектов:</h3>
                 <p>
-                  {`${
-                    projects?.filter((project) => project.status === 10).length
-                  } 
+                  {`${projects?.filter((project) => project.status === 10).length
+                    } 
                      ${caseOfNum(
-                       projects?.filter((project) => project.status === 10)
-                         .length,
-                       "projects"
-                     )}`}
+                      projects?.filter((project) => project.status === 10)
+                        .length,
+                      "projects"
+                    )}`}
                 </p>
               </div>
               <div className="archive__tasksWrapper">
@@ -419,15 +428,18 @@ export const Tracker = () => {
                       >
                         <div className="archive__completeTask__description">
                           <p className="project-title-archive">
-                            {project.name}
+                            {project.title}
                           </p>
-                          <p className="date">{project.date}</p>
+                          {/* old */}
+                          {/* <p className="date">{project.date}</p> */}
+                          <p className="date">{project.created_at.slice(0,10)}</p>
+
                         </div>
                         <div className="archive__completeTask__creator">
                           <img src={mockAvatar} alt="#" />
                           <div className="creator-title">
                             <h4>Создатель проекта:</h4>
-                            <p>{"Кисель Андрей"}</p>
+                            <p>{ project.owner ?? "Тестовый аккаунт заглушка"}</p>
                           </div>
                         </div>
                       </div>

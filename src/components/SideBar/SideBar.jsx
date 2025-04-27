@@ -55,7 +55,7 @@ export const SideBar = () => {
             <Link to={"/tracker-intro"}>Трекер</Link>
           </li>
           <li>
-            <a href="#">Контакты</a>
+            {/* <a href="#">Контакты</a> */}
           </li>
           <li>
             <Link to={"/blog"}>Блог</Link>

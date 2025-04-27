@@ -122,74 +122,80 @@ export const TicketFullScreen = () => {
 
   useEffect(() => {
     initListeners();
-    // apiRequest(`/task/get-task?task_id=${ticketId.id}&expand=mark`).then(
-    //   (taskInfo) => {
-    //     setTaskInfo(taskInfo);
-    //     setTaskInfo(taskInfo);
-    //     setDeadLine(taskInfo.dead_line);
-    //     setTaskPriority(taskInfo.execution_priority);
-    //     setStartDate(
-    //       taskInfo.dead_line ? new Date(taskInfo.dead_line) : new Date()
-    //     );
-    //     setInputsValue({
-    //       title: taskInfo.title,
-    //       description: taskInfo.description,
-    //       comment: "",
-    //     });
-    //     setTaskTags(taskInfo.mark);
-    //     apiRequest(
-    //       `/comment/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
-    //     ).then((res) => {
-    //       const comments = res.reduce((acc, cur) => {
-    //         if (!cur.parent_id) {
-    //           acc.push({ ...cur, subComments: [] });
-    //         } else {
-    //           acc.forEach((item) => {
-    //             if (item.id === cur.parent_id) item.subComments.push(cur);
-    //           });
-    //         }
-    //         return acc;
-    //       }, []);
-    //       setComments(comments);
-    //     });
-    //     apiRequest(
-    //       `/file/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
-    //     ).then((res) => {
-    //       if (Array.isArray(res)) {
-    //         setTaskFiles(res);
-    //       }
-    //     });
-    //     apiRequest(
-    //       `/timer/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
-    //     ).then((res) => {
-    //       let timerSeconds = 0;
-    //       res.length &&
-    //         res.forEach((time) => {
-    //           timerSeconds += time.deltaSeconds;
-    //           setCurrentTimerCount({
-    //             hours: Math.floor(timerSeconds / 60 / 60),
-    //             minute: Math.floor((timerSeconds / 60) % 60),
-    //             seconds: timerSeconds % 60,
-    //           });
-    //           updateTimerHours = Math.floor(timerSeconds / 60 / 60);
-    //           updateTimerMinute = Math.floor((timerSeconds / 60) % 60);
-    //           updateTimerSec = timerSeconds % 60;
-    //           if (!time.stopped_at) {
-    //             setTimerStart(true);
-    //             startTimer();
-    //             setTimerInfo(time);
-    //           }
-    //         });
-    //     });
-    //     apiRequest(
-    //       `/project/get-project?project_id=${taskInfo.project_id}&expand=columns,mark`
-    //     ).then((res) => {
-    //       setProjectInfo(res);
-    //       setCorrectProjectUsers(res.projectUsers);
-    //     });
-    //     setLoader(boardLoader);
-    //   }
-    // );
+
+
+    apiRequest(`/task/get-task?task_id=${ticketId.id}&expand=mark`).then(
+      (taskInfo) => {
+        setTaskInfo(taskInfo);
+        setTaskInfo(taskInfo);
+        setDeadLine(taskInfo.dead_line);
+        setTaskPriority(taskInfo.execution_priority);
+        setStartDate(
+          taskInfo.dead_line ? new Date(taskInfo.dead_line) : new Date()
+        );
+        setInputsValue({
+          title: taskInfo.title,
+          description: taskInfo.description,
+          comment: "",
+        });
+        setTaskTags(taskInfo.mark);
+
+        apiRequest(
+          `/comment/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
+        ).then((res) => {
+          const comments = res.reduce((acc, cur) => {
+            if (!cur.parent_id) {
+              acc.push({ ...cur, subComments: [] });
+            } else {
+              acc.forEach((item) => {
+                if (item.id === cur.parent_id) item.subComments.push(cur);
+              });
+            }
+            return acc;
+          }, []);
+          setComments(comments);
+        });
+
+        apiRequest(
+          `/file/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
+        ).then((res) => {
+          if (Array.isArray(res)) {
+            setTaskFiles(res);
+          }
+        });
+
+        // apiRequest(
+        //   `/timer/get-by-entity?entity_type=2&entity_id=${taskInfo.id}`
+        // ).then((res) => {
+        //   let timerSeconds = 0;
+        //   res.length &&
+        //     res.forEach((time) => {
+        //       timerSeconds += time.deltaSeconds;
+        //       setCurrentTimerCount({
+        //         hours: Math.floor(timerSeconds / 60 / 60),
+        //         minute: Math.floor((timerSeconds / 60) % 60),
+        //         seconds: timerSeconds % 60,
+        //       });
+        //       updateTimerHours = Math.floor(timerSeconds / 60 / 60);
+        //       updateTimerMinute = Math.floor((timerSeconds / 60) % 60);
+        //       updateTimerSec = timerSeconds % 60;
+        //       if (!time.stopped_at) {
+        //         setTimerStart(true);
+        //         startTimer();
+        //         setTimerInfo(time);
+        //       }
+        //     });
+        // });
+
+        apiRequest(
+          `/project/get-project?project_id=${taskInfo.project_id}&expand=columns,mark`
+        ).then((res) => {
+          setProjectInfo(res);
+          setCorrectProjectUsers(res.projectUsers);
+        });
+        setLoader(boardLoader);
+      }
+    );
 
     setTaskInfo(taskInfo);
     setTaskInfo(taskInfo);
@@ -211,8 +217,8 @@ export const TicketFullScreen = () => {
     //   minute: Math.floor((timerSeconds / 60) % 60),
     //   seconds: timerSeconds % 60,
     // });
-    // setTimerStart(true);
-    // startTimer();
+    setTimerStart(true);
+    startTimer();
     // setTimerInfo(time);
     setProjectInfo('res');
     setCorrectProjectUsers('projectUsers');
@@ -345,7 +351,7 @@ export const TicketFullScreen = () => {
             comment_id: subComment.id,
             status: 0,
           },
-        }).then(() => {});
+        }).then(() => { });
       });
     }
   }
@@ -424,10 +430,10 @@ export const TicketFullScreen = () => {
     });
   }
 
-  function correctTimerTime(time) {
-    if (time < 10) return `0${time}`;
-    if (time > 10) return time;
-  }
+  // function correctTimerTime(time) {
+  //   if (time < 10) return `0${time}`;
+  //   if (time > 10) return time;
+  // }
 
   function deleteTaskExecutor() {
     apiRequest("/task/update-task", {
@@ -502,7 +508,7 @@ export const TicketFullScreen = () => {
         task_id: taskInfo.id,
         dead_line: getCorrectRequestDate(date),
       },
-    }).then(() => {});
+    }).then(() => { });
   }
 
   async function handleUpload(event) {
@@ -546,7 +552,7 @@ export const TicketFullScreen = () => {
         task_id: taskInfo.id,
         execution_priority: key,
       },
-    }).then(() => {});
+    }).then(() => { });
   }
 
   // function deleteFile(file) {
@@ -661,8 +667,8 @@ export const TicketFullScreen = () => {
 
   return (
     <section className="ticket-full-screen">
-       <ProfileHeader />
-      <Navigation /> 
+      <ProfileHeader />
+      <Navigation />
       <div className="container">
         <div className="tracker__content">
           <ProfileBreadcrumbs
@@ -708,7 +714,7 @@ export const TicketFullScreen = () => {
             <div className="tracker__tabs__content content-tabs">
               <div className="tasks__head">
                 <div className="tasks__head__wrapper tasks__head__wrapper__fullScreen">
-                  <h5>Проект : {projectInfo.name}</h5>
+                  <h5>Проект : {projectInfo.title}</h5>
 
                   <TrackerModal
                     active={modalAddWorker}
@@ -1136,9 +1142,10 @@ export const TicketFullScreen = () => {
                     <img src={watch}></img>
                     <span>Длительность : </span>
                     <p>
-                      {correctTimerTime(currentTimerCount.hours)}:
+                      {/* {correctTimerTime(currentTimerCount.hours)}:
                       {correctTimerTime(currentTimerCount.minute)}:
-                      {correctTimerTime(currentTimerCount.seconds)}
+                      {correctTimerTime(currentTimerCount.seconds)} */}
+                      20:11:32
                     </p>
                   </div>
 
@@ -1146,7 +1153,7 @@ export const TicketFullScreen = () => {
                     <button
                       className={
                         taskInfo.executor_id ===
-                        Number(localStorage.getItem("id"))
+                          Number(localStorage.getItem("id"))
                           ? "stop"
                           : "stop disable"
                       }
@@ -1158,7 +1165,7 @@ export const TicketFullScreen = () => {
                     <button
                       className={
                         taskInfo.executor_id ===
-                        Number(localStorage.getItem("id"))
+                          Number(localStorage.getItem("id"))
                           ? "start"
                           : "start disable"
                       }
@@ -1286,7 +1293,7 @@ export const TicketFullScreen = () => {
                     onClick={archiveTask}
                     className={
                       profileInfo.id_user === projectInfo.owner_id ||
-                      profileInfo.id_user === taskInfo.user_id
+                        profileInfo.id_user === taskInfo.user_id
                         ? ""
                         : "disable"
                     }
@@ -1298,7 +1305,7 @@ export const TicketFullScreen = () => {
                     onClick={deleteTask}
                     className={
                       profileInfo.id_user === projectInfo.owner_id ||
-                      profileInfo.id_user === taskInfo.user_id
+                        profileInfo.id_user === taskInfo.user_id
                         ? ""
                         : "disable"
                     }

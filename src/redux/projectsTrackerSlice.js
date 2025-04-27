@@ -68,7 +68,7 @@ export const projectsTrackerSlice = createSlice({
             data: {
               task_id: action.payload.startWrapperIndex.task.id,
               column_id: column.id,
-              priority: column.tasks.length - 1,
+              execution_priority: column.tasks.length - 1,
             },
           }).then(() => {});
         }
@@ -102,7 +102,7 @@ export const projectsTrackerSlice = createSlice({
           column.tasks.forEach((task, index) => {
             const curTask = {
               task_id: task.id,
-              priority: index,
+              execution_priority: index,
             };
             priorityTasks.push(curTask);
           });
@@ -165,10 +165,12 @@ export const projectsTrackerSlice = createSlice({
     },
   },
   extraReducers: {
-    // [setProjectBoardFetch.fulfilled]: (state, action) => {
-    //   state.projectBoard = action.payload;
-    //   state.boardLoader = false;
-    // },
+    [setProjectBoardFetch.fulfilled]: (state, action) => {
+
+
+      state.projectBoard = action.payload.project;
+      state.boardLoader = false;
+    },
   },
 });
 

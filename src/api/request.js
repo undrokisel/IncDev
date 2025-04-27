@@ -5,6 +5,7 @@ import { getToken, urlHasParams } from "@utils/helper";
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   validateStatus(status) {
+    // пропускает все статусы как успешные, придется далее обрабатывать ошибки
     return status;
   },
 });
@@ -16,6 +17,8 @@ export const apiRequest = (
     params,
     data,
     headers = {
+      // доступ к серверу с любого домена
+      // можно указать конкретный домен для доступа к ресурсам
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     },
@@ -34,6 +37,7 @@ export const apiRequest = (
     })
     .then(
       (response) =>
+            
         new Promise((resolve) => {
           if (response.data?.redirect || response.status === 401) {
             window.location.replace("/auth");
@@ -47,10 +51,10 @@ export const apiRequest = (
 };
 
 const RequestError = (code, msg, data) => {
-  const description = msg ? `- ${msg}` : "";
+  let messag = msg ? `- ${msg}` : "";
 
   this.name = "RequestError";
-  this.message = `API returned: ${code}${description}.`;
+  this.message = `API returned: ${code}${messag}.`;
   this.code = code;
   this.description = msg;
   this.data = data;

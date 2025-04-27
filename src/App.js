@@ -91,11 +91,14 @@ const App = () => {
 
           <Route exact path="/blog" element={<Blog />}></Route>
           <Route exact path="/blog/article/:id" element={<Article />}></Route>
+
+          {/* сделано */}
           <Route
             exact
             path="/frequently-asked-questions"
             element={<FrequentlyAskedQuestions />}
-          />
+            />
+          {/* сделано */}
           <Route
             exact
             path="/frequently-asked-question/:id"

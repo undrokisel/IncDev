@@ -26,14 +26,17 @@ import avatarMok from "assets/images/avatarMok.png";
 
 import { ProfileCalendarComponent } from "./ProfileCalendarComponent";
 import "./profileCalendar.scss";
-import { profileInfo, reportsMock } from "@store/profile";
+
+import { 
+  // profileInfo,
+   reportsMock } from "@store/profile";
 
 export const ProfileCalendar = () => {
   if (localStorage.getItem("role_status") === "18") {
     return <Navigate to="/profile" replace />;
   }
   const dispatch = useDispatch();
-  // const profileInfo = useSelector(getProfileInfo);
+  const profileInfo = useSelector(getProfileInfo);
   const requestDates = useSelector(getRequestDates);
   const [value, setValue] = useState(moment());
   const [reports, setReports] = useState([]);
